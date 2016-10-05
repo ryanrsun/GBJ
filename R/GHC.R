@@ -1,0 +1,95 @@
+#' GHC.R
+#'
+#' Given a vector of individual test statistics and their pairwise correlations, calculate 
+#' the Generalized Higher Criticism (GHC) second-level test statistic and it's p-value.
+#'
+#' @param test_stats Vector of all individual (first-level) test statistics
+#' @param pairwise_cors A vector of all d(d-1)/2 pairwise correlations between the test 
+#' statistics, where d is total number of test statistics in the set.  
+#'
+#' @return A list with the elements:
+#' \item{GHC}{The observed Generalized Higher Criticism test statistic.}
+#' \item{GHC_pvalue}{The p-value of this observed value, given the size of the set and 
+#' correlation structure.}
+#'
+#' @export
+#' @examples 
+#' # Should return statistic = 1.987733 and p_value = 0.2758522
+#' set.seed(100)
+#' test_stats <- rnorm(5) + rep(1,5)
+#' GHC(test_stats, pairwise_cors=rep(0.2,10))
+
+
+GHC <- function(test_stats, pairwise_cors) 
+{
+	# Ensure that the thresholds are sorted in descending order, largest first.
+	t_vec <- sort(abs(test_stats), decreasing=TRUE)
+	d <- length(t_vec)
+	
+	# Correct number of pairwise correlations?
+	if (length(pairwise_cors) != d*(d-1)/2) {
+		stop("Your pairwise correlation vector is of the wrong length!")
+	}
+
+	# Calculate GHC objectives
+	i_vec <- 1:d
+	p_values <- 1-pchisq(t_vec^2, df=1)
+	GHC_stats <- (i_vec - d*p_values) / sqrt(calc_var_nonzero_mu(d=d, t=t_vec, mu=0,
+				 pairwise_cors=pairwise_cors))
+				 
+	# Observed GHC statistic
+	ghc <- max(GHC_stats)
+	
+	# Calculate p-value
+	if (ghc <= 0) {
+		return (list(GHC=ghc, GHC_pvalue=1))
+	}
+	
+	# GHC bounds
+	GHC_p_bounds <- rep(NA, d)
+		
+	# increase tolerance of uniroot for large ghc
+	if(ghc>10) {
+		my_tol <- (-100)
+	} else {my_tol <- (-12)}
+		
+	# Use uniroot to find the pvalue bounds.
+	GHC_lowerbound <- 10^(-20)
+	for(kkk in 1:d) {
+		# Sometimes run into precision errors, need to think about how
+		# we can fix this so don't need the tryCatch
+		temp_ghc <- tryCatch(uniroot(GHC_objective, k=kkk, d=d, offset=ghc, 
+				pairwise_cors=pairwise_cors, lower=GHC_lowerbound, upper=(1-10^(-12)), 
+				tol=(10^(my_tol))), error=function(e) e, warning=function(w) w)			
+			
+		# if it doesn't work, just return NA for the p-value
+		if(length(class(temp_ghc))>1) {
+			return (list(GHC=ghc, GHC_pvalue=NA))
+		} 
+		
+		# It worked, keep going
+		GHC_p_bounds[kkk] <- temp_ghc$root
+			
+		# small security measure to ensure that GHC bounds are increasing
+		GHC_lowerbound <- GHC_p_bounds[kkk]
+	}
+		
+	# now put the bounds in terms of the Z statistics
+	GHC_z_bounds <- qnorm(1-GHC_p_bounds/2)
+	GHC_z_bounds <- sort(GHC_z_bounds, decreasing=F)
+	
+	# qnorm can't handle more precision than 10^-16
+	# Also crossprob_cor can only handle Z up to 8.2
+	GHC_z_bounds[which(GHC_z_bounds > 8.2)]= 8.2
+
+	# Send it to the C++.
+	if (sum(abs(pairwise_cors)) == 0) {
+		# For the independence flag in the c++, just have to send a number < -1.
+		GHC_corp <- ebb_crossprob_cor_R(d=d, bounds=GHC_z_bounds, correlations=rep(-999,2))	
+	} else {
+		GHC_corp <- ebb_crossprob_cor_R(d=d, bounds=GHC_z_bounds, correlations=pairwise_cors)
+	}		
+			
+	return ( list(GHC=ghc, GHC_pvalue=GHC_corp) )
+}
+

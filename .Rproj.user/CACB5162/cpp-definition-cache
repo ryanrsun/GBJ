@@ -1,0 +1,107 @@
+[
+    {
+        "definitions" : [
+            {
+                "column" : 15,
+                "file" : "/Users/ryansun/Documents/Research/Paper2/Software/GBJ/src/ebb_crossprob_cor_R.cpp",
+                "kind" : 6,
+                "line" : 49,
+                "name" : "fast_square(const double &)",
+                "parent_name" : "",
+                "usr" : "c:@F@fast_square#&1d#"
+            },
+            {
+                "column" : 15,
+                "file" : "/Users/ryansun/Documents/Research/Paper2/Software/GBJ/src/ebb_crossprob_cor_R.cpp",
+                "kind" : 6,
+                "line" : 55,
+                "name" : "fast_cube(const double &)",
+                "parent_name" : "",
+                "usr" : "c:@F@fast_cube#&1d#"
+            },
+            {
+                "column" : 15,
+                "file" : "/Users/ryansun/Documents/Research/Paper2/Software/GBJ/src/ebb_crossprob_cor_R.cpp",
+                "kind" : 6,
+                "line" : 68,
+                "name" : "surv(const double &)",
+                "parent_name" : "",
+                "usr" : "c:@F@surv#&1d#"
+            },
+            {
+                "column" : 6,
+                "file" : "/Users/ryansun/Documents/Research/Paper2/Software/GBJ/src/ebb_crossprob_cor_R.cpp",
+                "kind" : 6,
+                "line" : 80,
+                "name" : "create_logftable(const int &, std::vector<double> &)",
+                "parent_name" : "",
+                "usr" : "c:@F@create_logftable#&1I#&$@N@std@N@__1@C@vector>#d#$@N@std@N@__1@C@allocator>#d#"
+            },
+            {
+                "column" : 6,
+                "file" : "/Users/ryansun/Documents/Research/Paper2/Software/GBJ/src/ebb_crossprob_cor_R.cpp",
+                "kind" : 6,
+                "line" : 96,
+                "name" : "create_rtable(const int &, const std::vector<double> &, std::vector<std::vector<double> > &)",
+                "parent_name" : "",
+                "usr" : "c:@F@create_rtable#&1I#&1$@N@std@N@__1@C@vector>#d#$@N@std@N@__1@C@allocator>#d#&$@N@std@N@__1@C@vector>#S2_#$@N@std@N@__1@C@allocator>#S2_#"
+            },
+            {
+                "column" : 6,
+                "file" : "/Users/ryansun/Documents/Research/Paper2/Software/GBJ/src/ebb_crossprob_cor_R.cpp",
+                "kind" : 6,
+                "line" : 130,
+                "name" : "create_hermtable(const int &, const std::vector<double> &, std::vector<std::vector<double> > &)",
+                "parent_name" : "",
+                "usr" : "c:@F@create_hermtable#&1I#&1$@N@std@N@__1@C@vector>#d#$@N@std@N@__1@C@allocator>#d#&$@N@std@N@__1@C@vector>#S2_#$@N@std@N@__1@C@allocator>#S2_#"
+            },
+            {
+                "column" : 6,
+                "file" : "/Users/ryansun/Documents/Research/Paper2/Software/GBJ/src/ebb_crossprob_cor_R.cpp",
+                "kind" : 6,
+                "line" : 165,
+                "name" : "avg_cond_covar(const int &, const std::vector<double> &, const std::vector<std::vector<double> > &, const std::vector<std::vector<double> > &, std::vector<double> &)",
+                "parent_name" : "",
+                "usr" : "c:@F@avg_cond_covar#&1I#&1$@N@std@N@__1@C@vector>#d#$@N@std@N@__1@C@allocator>#d#&1$@N@std@N@__1@C@vector>#S2_#$@N@std@N@__1@C@allocator>#S2_#S4_#&S2_#"
+            },
+            {
+                "column" : 6,
+                "file" : "/Users/ryansun/Documents/Research/Paper2/Software/GBJ/src/ebb_crossprob_cor_R.cpp",
+                "kind" : 6,
+                "line" : 232,
+                "name" : "eval_EBB_PMF_allN(const int &, const int &, const double &, const double &, std::vector<double> &)",
+                "parent_name" : "",
+                "usr" : "c:@F@eval_EBB_PMF_allN#&1I#S0_#&1d#S1_#&$@N@std@N@__1@C@vector>#d#$@N@std@N@__1@C@allocator>#d#"
+            },
+            {
+                "column" : 8,
+                "file" : "/Users/ryansun/Documents/Research/Paper2/Software/GBJ/src/ebb_crossprob_cor_R.cpp",
+                "kind" : 6,
+                "line" : 288,
+                "name" : "calc_qka(const int &, const int &, const int &, const std::vector<double> &, const std::vector<double> &, const bool &, const double &, const double &)",
+                "parent_name" : "",
+                "usr" : "c:@F@calc_qka#&1I#S0_#S0_#&1$@N@std@N@__1@C@vector>#d#$@N@std@N@__1@C@allocator>#d#S1_#&1b#&1d#S5_#"
+            },
+            {
+                "column" : 8,
+                "file" : "/Users/ryansun/Documents/Research/Paper2/Software/GBJ/src/ebb_crossprob_cor_R.cpp",
+                "kind" : 6,
+                "line" : 340,
+                "name" : "calc_allq(const int &, const std::vector<double> &, const std::vector<double> &, const bool &)",
+                "parent_name" : "",
+                "usr" : "c:@F@calc_allq#&1I#&1$@N@std@N@__1@C@vector>#d#$@N@std@N@__1@C@allocator>#d#S1_#&1b#"
+            },
+            {
+                "column" : 8,
+                "file" : "/Users/ryansun/Documents/Research/Paper2/Software/GBJ/src/ebb_crossprob_cor_R.cpp",
+                "kind" : 6,
+                "line" : 453,
+                "name" : "ebb_crossprob_cor_R(int, NumericVector, NumericVector)",
+                "parent_name" : "",
+                "usr" : "c:@F@ebb_crossprob_cor_R#I#$@N@Rcpp@C@Vector>#VI14#@N@Rcpp@CT>1#T@PreserveStorage#S0_#"
+            }
+        ],
+        "file" : "/Users/ryansun/Documents/Research/Paper2/Software/GBJ/src/ebb_crossprob_cor_R.cpp",
+        "file_last_write" : 1475641010
+    }
+]
