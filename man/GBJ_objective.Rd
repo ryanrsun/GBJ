@@ -26,8 +26,10 @@ The GBJ objective at t (for given d, kkk, pairwise_cors) minus the offset
 \description{
 Calculates the GBJ objective function at given threshold points.  Used both to calculate the
 observed GBJ statistic and also to find the boundary points for p-value calculation (through uniroot).
+Mostly for internal use.
 }
 \examples{
-GBJ_objective(t_vec=1:5, d=5, kkk=NULL, pairwise_cors=rep(0.3,10), offset=0)
+GBJ_objective(t_vec=1:5, d=5, k_vec=NULL, pairwise_cors=rep(0.2,10), offset=0)
 }
+\keyword{internal}
 

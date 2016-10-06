@@ -12,6 +12,10 @@
 #' \item{GBJ_pvalue}{The p-value of this observed value, given the size of the set and 
 #' correlation structure.}
 #'
+#' @import stats
+#' @importFrom Rcpp evalCpp
+#' @useDynLib GBJ
+#'
 #' @export
 #' @examples 
 #' # Should return statistic = 0.9248399 and p_value = 0.2670707

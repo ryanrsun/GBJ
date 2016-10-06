@@ -20,9 +20,12 @@ correlation structure.}
 }
 \description{
 Given a vector of individual test statistics and their pairwise correlations, calculate 
-the Generalized Higher Criticism second-level test statistic and it's p-value.
+the Generalized Higher Criticism (GHC) second-level test statistic and it's p-value.
 }
 \examples{
-GHC(test_stats=1:5, d=5, pairwise_cors=rep(0.3,10))
+# Should return statistic = 1.987733 and p_value = 0.2758522
+set.seed(100)
+test_stats <- rnorm(5) + rep(1,5)
+GHC(test_stats, pairwise_cors=rep(0.2,10))
 }
 

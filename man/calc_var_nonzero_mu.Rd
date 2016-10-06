@@ -24,6 +24,7 @@ Internal function to calculate variance of S(t) when the Z_1,...,Z_d have nonzer
 See GBJ paper for more details.  Vectorized in t.
 }
 \examples{
-calc_var_mu_nonzero(d=5, t=1, mu=1, pairwise_cors=rep(0.3, 10))
+calc_var_nonzero_mu(d=5, t=1, mu=1, pairwise_cors=rep(0.3, 10))
 }
+\keyword{internal}
 

@@ -28,4 +28,5 @@ when the kth p-value order statistic is x, for a set of size d.
 \examples{
 GHC_objective(x=0.1, k=2, d=5, offset=0, pairwise_cors=rep(0.2,10))
 }
+\keyword{internal}
 

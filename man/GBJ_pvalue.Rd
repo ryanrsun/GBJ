@@ -2,7 +2,7 @@
 % Please edit documentation in R/GBJ_pvalue.R
 \name{GBJ_pvalue}
 \alias{GBJ_pvalue}
-\title{calc_GBJ_p.R}
+\title{GBJ_pvalue.R}
 \usage{
 GBJ_pvalue(observed_gbj, d, pairwise_cors, times_to_try = 5)
 }
@@ -25,6 +25,6 @@ The p-value of the GBJ test.
 Calculate the p-value for the Generalized Berk-Jones (GBJ) statistic.
 }
 \examples{
-calc_GBJ_p(observed_gbj=2, d=5, pairwise_cors=rep(0.3,10))
+GBJ_pvalue(observed_gbj=2, d=5, pairwise_cors=rep(0.2,10))
 }
 

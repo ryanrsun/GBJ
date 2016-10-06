@@ -10,8 +10,11 @@
 #' 
 #' @return The result of the infinite sum.
 #'
+#' @keywords internal
+#' @export
+#'
 #' @examples 
-#' herm_poly_diff_t(t1=0, t2=0, cor_vec=rep(0.3, 10))
+#' herm_poly_diff_t(t1=0, t2=0, pairwise_cors=rep(0.3, 10))
 
 # The infinite sum terms when we have to multiply two different Hermite poly terms
 # The 't' here refers to t-mu or -t-mu or whatever is inside the H

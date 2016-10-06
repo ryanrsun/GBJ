@@ -2,7 +2,7 @@
 #'
 #' Survival (1 minus the CDF) function of standard normal random variable.
 #' 
-#' @param x
+#' @param x Vector of quantiles
 #' 
 #' @return Probability that a standard normal random variable is greater than x.
 #'

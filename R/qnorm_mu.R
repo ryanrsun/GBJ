@@ -10,6 +10,9 @@
 #' 
 #' @return Pr(-t < Z < t) - kkk/d for Z~N(mu,1).
 #'
+#' @keywords internal
+#' @export
+#'
 #' @examples 
 #' qnorm_mu(mu=0, t=1.96, kkk=1, d=5)		# Should return 0
 

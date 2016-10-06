@@ -23,6 +23,9 @@ Given a vector of individual test statistics and their pairwise correlations, ca
 the MinimumP (see Conneely and Boehnke, 2007) second-level test statistic and it's p-value.
 }
 \examples{
-minP(test_stats=1:5, d=5, pairwise_cors=rep(0.3,10))
+# Should return statistic = 0.05918928 and p_value = 0.2525972.
+set.seed(100)
+test_stats <- rnorm(5) + rep(1,5)
+minP(test_stats, pairwise_cors=rep(0.3,10))
 }
 

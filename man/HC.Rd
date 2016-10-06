@@ -23,6 +23,9 @@ Given a vector of individual test statistics and their pairwise correlations, ca
 the Higher Criticism second-level test statistic and it's p-value.
 }
 \examples{
-HC(test_stats=1:5, d=5, pairwise_cors=rep(0.3,10))
+# Should return statistic = 2.067475 and p_value = 0.2755146
+set.seed(100)
+test_stats = rnorm(5) + rep(1,5)
+HC(test_stats, pairwise_cors=rep(0.2,10))
 }
 

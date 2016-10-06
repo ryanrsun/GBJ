@@ -12,7 +12,7 @@ ebb_loglik(x, d)
 \item{d}{The number of test stsatistics in the set}
 }
 \value{
-log( Pr(V=x[1]) ) where V~EBB(\mu,\gamma; d)
+log( Pr(V=x[1]) ) where V~EBB(mu,gamma; d)
 }
 \description{
 An internal function only (doesn't do error checking or take care of boundary cases).
@@ -22,4 +22,5 @@ Takes in a vectorized argument because we apply() it in run_BB_GBJ().
 \examples{
 ebb_loglik(x=c(1, 0.5, 0.1), d=10)	
 }
+\keyword{internal}
 

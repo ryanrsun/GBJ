@@ -7,7 +7,7 @@
 surv(x)
 }
 \arguments{
-\item{x}{}
+\item{x}{Vector of quantiles}
 }
 \value{
 Probability that a standard normal random variable is greater than x.

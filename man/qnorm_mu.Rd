@@ -16,13 +16,14 @@ qnorm_mu(mu, t, kkk, d)
 \item{d}{We decided to make you input the fraction in two parts.}
 }
 \value{
-Pr(-t < Z < t) - kkk/d for Z~N(\mu,1).
+Pr(-t < Z < t) - kkk/d for Z~N(mu,1).
 }
 \description{
-Calculates Pr(-t < Z < t) - kkk/d for Z~N(\mu,1).
-Take the root of this function to find the \mu such that P(|Z|>=t_k) = k/d.
+Internal function to calculate Pr(-t < Z < t) - kkk/d for Z~N(mu,1).
+Take the root of this function to find the mu such that P(|Z|>=t_k) = k/d.
 }
 \examples{
 qnorm_mu(mu=0, t=1.96, kkk=1, d=5)		# Should return 0
 }
+\keyword{internal}
 

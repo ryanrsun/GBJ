@@ -7,6 +7,9 @@
 #' @param x A vector of length 3 with (1) value of outcome (2) mu parameter (3) gamma parameter
 #' @param d The number of test stsatistics in the set
 #' 
+#' @keywords internal
+#' @export
+#'
 #' @return log( Pr(V=x[1]) ) where V~EBB(mu,gamma; d)
 #'
 #' @examples 

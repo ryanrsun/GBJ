@@ -14,9 +14,12 @@
 #' @param offset Used if we want to subtract the observed gbj value for uniroot.
 #'
 #' @return The GBJ objective at t (for given d, kkk, pairwise_cors) minus the offset
+#'
+#' @keywords internal
 #' @export
+#'
 #' @examples 
-#' GBJ_objective(t_vec=1:5, d=5, kkk=NULL, pairwise_cors=rep(0.3,10), offset=0)
+#' GBJ_objective(t_vec=1:5, d=5, k_vec=NULL, pairwise_cors=rep(0.2,10), offset=0)
 
 GBJ_objective <- function(t_vec, d, k_vec=NULL, pairwise_cors, offset=0) {
 	

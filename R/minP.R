@@ -17,7 +17,7 @@
 #' # Should return statistic = 0.05918928 and p_value = 0.2525972.
 #' set.seed(100)
 #' test_stats <- rnorm(5) + rep(1,5)
-#' minP(test_stats, d=5, pairwise_cors=rep(0.3,10))
+#' minP(test_stats, pairwise_cors=rep(0.3,10))
 
 
 minP <- function(test_stats, pairwise_cors) 

@@ -9,10 +9,13 @@
 #' @param pairwise_cors A vector of all d(d-1)/2 pairwise correlations between the test 
 #' statistics, where d is total number of test statistics in the set.
 #' 
+#' @keywords internal
+#' @export
+#'
 #' @return The variance of S(t) when the Z_1,...,Z_d have nonzero mean mu.
 #'
 #' @examples 
-#' calc_var_mu_nonzero(d=5, t=1, mu=1, pairwise_cors=rep(0.3, 10))
+#' calc_var_nonzero_mu(d=5, t=1, mu=1, pairwise_cors=rep(0.3, 10))
 
 calc_var_nonzero_mu <- function(d, t, mu, pairwise_cors) {
 	

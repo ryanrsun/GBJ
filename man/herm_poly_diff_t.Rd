@@ -2,7 +2,7 @@
 % Please edit documentation in R/herm_poly_diff_t.R
 \name{herm_poly_diff_t}
 \alias{herm_poly_diff_t}
-\title{herm_poly_diff.R}
+\title{herm_poly_diff_t.R}
 \usage{
 herm_poly_diff_t(t1, t2, pairwise_cors)
 }
@@ -22,6 +22,7 @@ Internal function to add up the infinite sum term in calculating the variance of
 the test statistics Z_1,...,Z_d have a non-zero mean.  See GBJ paper for more details.
 }
 \examples{
-herm_poly_diff(t1=0, t2=0, cor_vec=rep(0.3, 10))
+herm_poly_diff_t(t1=0, t2=0, pairwise_cors=rep(0.3, 10))
 }
+\keyword{internal}
 

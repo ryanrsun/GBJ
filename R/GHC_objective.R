@@ -12,6 +12,9 @@
 #'
 #' @return The value of the kth HC objective 
 #'
+#' @keywords internal
+#' @export
+#'
 #' @examples 
 #' GHC_objective(x=0.1, k=2, d=5, offset=0, pairwise_cors=rep(0.2,10))
 
