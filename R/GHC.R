@@ -37,8 +37,8 @@ GHC <- function(test_stats, pairwise_cors)
 	GHC_stats <- (i_vec - d*p_values) / sqrt(calc_var_nonzero_mu(d=d, t=t_vec, mu=0,
 				 pairwise_cors=pairwise_cors))
 				 
-	# Observed GHC statistic
-	ghc <- max(GHC_stats)
+	# Observed GHC statistic - sometimes a Z-statistic is 0 and so we get NA for variance
+	ghc <- max(GHC_stats, na.rm=TRUE)
 	
 	# Calculate p-value
 	if (ghc <= 0) {
