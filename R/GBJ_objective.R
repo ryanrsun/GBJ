@@ -100,8 +100,8 @@ GBJ_objective <- function(t_vec, d, k_vec=NULL, pairwise_cors, offset=0) {
 	gamma_check_alt <- apply(pq_mat_alt, 1, max)
 	
 	# Recalibrate non_zero
-	non_zero <- which(gamma_null[non_zero] >= gamma_check_null[non_zero] & 
-					gamma_alt[non_zero] >= gamma_check_alt[non_zero])
+	non_zero <- which(gamma_null >= gamma_check_null & 
+					gamma_alt >= gamma_check_alt)
 	if (length(non_zero)==0 ) {
 		(rep(0,length(t_vec)) - rep(offset, length(t_vec)) )
 	}
