@@ -4,28 +4,33 @@
 \alias{HC}
 \title{HC.R}
 \usage{
-HC(test_stats, pairwise_cors)
+HC(test_stats, cor_mat = NULL, pairwise_cors = NULL)
 }
 \arguments{
 \item{test_stats}{A scalar or vector of threshold points (magnitudes of test statistics)}
 
-\item{pairwise_cors}{A vector of all d(d-1)/2 pairwise correlations between the test 
-statistics, where d is total number of test statistics in the set.}
+\item{cor_mat}{A d*d matrix of the correlations between all the test statistics in
+the set, where d is the total number of test statistics in the set.}
+
+\item{pairwise_cors}{A vector of all d(d-1)/2 pairwise correlations between the test
+statistics.  You only need to specify EITHER cor_mat OR pairwise_cors.}
 }
 \value{
 A list with the elements:
 \item{HC}{The observed Higher Criticism test statistic.}
-\item{HC_pvalue}{The p-value of this observed value, given the size of the set and 
+\item{HC_pvalue}{The p-value of this observed value, given the size of the set and
 correlation structure.}
 }
 \description{
-Given a vector of individual test statistics and their pairwise correlations, calculate 
+Given a vector of individual test statistics and their pairwise correlations, calculate
 the Higher Criticism second-level test statistic and it's p-value.
 }
 \examples{
 # Should return statistic = 2.067475 and p_value = 0.2755146
 set.seed(100)
-test_stats = rnorm(5) + rep(1,5)
-HC(test_stats, pairwise_cors=rep(0.2,10))
+Z_vec <- rnorm(5) + rep(1,5)
+cor_Z <- matrix(data=0.2, nrow=5, ncol=5)
+diag(cor_Z) <- 1
+HC(test_stats=Z_vec, cor_mat=cor_Z)
 }
 

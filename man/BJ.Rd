@@ -4,28 +4,33 @@
 \alias{BJ}
 \title{BJ.R}
 \usage{
-BJ(test_stats, pairwise_cors)
+BJ(test_stats, cor_mat = NULL, pairwise_cors = NULL)
 }
 \arguments{
 \item{test_stats}{Vector of all individual (first-level) test statistics}
 
-\item{pairwise_cors}{A vector of all d(d-1)/2 pairwise correlations between the test 
-statistics, where d is total number of test statistics in the set.}
+\item{cor_mat}{d*d matrix of the correlations between all the test statistics in
+the set, where d is the total number of test statistics in the set.}
+
+\item{pairwise_cors}{A vector of all d(d-1)/2 pairwise correlations between the test
+statistics.  You only need to specify EITHER cor_mat OR pairwise_cors.}
 }
 \value{
 A list with the elements:
 \item{BJ}{The observed Berk-Jones test statistic.}
-\item{BJ_pvalue}{The p-value of this observed value, given the size of the set and 
+\item{BJ_pvalue}{The p-value of this observed value, given the size of the set and
 correlation structure.}
 }
 \description{
-Given a vector of individual test statistics and their pairwise correlations, calculate 
+Given a vector of individual test statistics and their pairwise correlations, calculate
 the Berk-Jones second-level test statistic and it's p-value.
 }
 \examples{
 # Should return statistic = 1.243353 and p_value = 0.256618
 set.seed(100)
-test_stats <- rnorm(5) + rep(1,5)
-BJ(test_stats, pairwise_cors=rep(0.2,10))
+Z_vec <- rnorm(5) + rep(1,5)
+cor_Z <- matrix(data=0.2, nrow=5, ncol=5)
+diag(cor_Z) <- 1
+BJ(test_stats=Z_vec, cor_mat=cor_Z)
 }
 

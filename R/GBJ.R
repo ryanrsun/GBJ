@@ -3,9 +3,11 @@
 #' Given a vector of individual test statistics and their pairwise correlations, calculate
 #' the Generalized Berk-Jones (GBJ) second-level test statistic and it's p-value.
 #'
-#' @param test_stats Vector of all individual (first-level) test statistics
+#' @param test_stats Vector of all individual (first-level) test statistics.
+#' @param cor_mat A d*d matrix of the correlations between the test statistics, where
+#' d is the total number of test statistics in the set.
 #' @param pairwise_cors A vector of all d(d-1)/2 pairwise correlations between the test
-#' statistics, where d is total number of test statistics in the set.
+#' statistics.  You only need to specify EITHER cor_mat OR pairwise_cors.
 #'
 #' @return A list with the elements:
 #' \item{GBJ}{The observed Generalized Higher Criticism test statistic.}
@@ -20,15 +22,20 @@
 #' @examples
 #' # Should return statistic = 0.9248399 and p_value = 0.2670707
 #' set.seed(100)
-#' test_stats <- rnorm(5) + rep(1,5)
-#' GBJ(test_stats, pairwise_cors=rep(0.2,10))
+#' Z_vec <- rnorm(5) + rep(1,5)
+#' cor_Z <- matrix(data=0.2, nrow=5, ncol=5)
+#' diag(cor_Z) <- 1
+#' GBJ(test_stats=Z_vec, cor_mat=cor_Z)
 
 
-GBJ <- function(test_stats, pairwise_cors)
+GBJ <- function(test_stats, cor_mat=NULL, pairwise_cors=NULL)
 {
-	# Ensure that the thresholds are sorted in descending order, largest first.
-	t_vec <- sort(abs(test_stats), decreasing=TRUE)
-	d <- length(t_vec)
+  # Parse inputs, do some error checking.
+  param_list <- parse_input(test_stats=test_stats, cor_mat=cor_mat,
+                            pairwise_cors=pairwise_cors)
+  t_vec <- param_list$t_vec
+  pairwise_cors <- param_list$pairwise_cors
+  d <- length(t_vec)
 
 	# Sometimes test stats are too big for R's precision
 	too_big <- which(t_vec > 8.2)

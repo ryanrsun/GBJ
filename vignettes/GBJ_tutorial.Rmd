@@ -81,13 +81,13 @@ log_reg_stats$cor_mat[1:5,1:5]
 At this point we can extract the vector of pairwise correlations using the function `upper.tri()` and then apply GBJ or any of the other set-based methods provided by this package. (If starting from summary-level data, begin at this step - simple, right?).  
 
 ```{r}
-cor_vec <- log_reg_stats$cor_mat[upper.tri(log_reg_stats$cor_mat)]
+cor_Z <- log_reg_stats$cor_mat
 score_stats = log_reg_stats$test_stats
-GBJ(test_stats=score_stats, pairwise_cors=cor_vec)
-GHC(test_stats=score_stats, pairwise_cors=cor_vec)
-HC(test_stats=score_stats, pairwise_cors=cor_vec)
-BJ(test_stats=score_stats, pairwise_cors=cor_vec)
-minP(test_stats=score_stats, pairwise_cors=cor_vec)
+GBJ(test_stats=score_stats, cor_mat=cor_Z)
+GHC(test_stats=score_stats, cor_mat=cor_Z)
+HC(test_stats=score_stats, cor_mat=cor_Z)
+BJ(test_stats=score_stats, cor_mat=cor_Z)
+minP(test_stats=score_stats, cor_mat=cor_Z)
 ```
 
 ## Some advice for special cases
