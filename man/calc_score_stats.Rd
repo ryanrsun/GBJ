@@ -4,14 +4,14 @@
 \alias{calc_score_stats}
 \title{calc_score_stats.R}
 \usage{
-calc_score_stats(null_model, factor_matrix, model_type)
+calc_score_stats(null_model, factor_matrix, link_function)
 }
 \arguments{
 \item{null_model}{A fitted R regression model}
 
 \item{factor_matrix}{An n*p matrix with each factor as one column.  There should be no missing data.}
 
-\item{model_type}{Either "linear" or "logistic"}
+\item{link_function}{Either "linear" or "logistic" or "log"}
 }
 \value{
 A list with the elements:
@@ -20,7 +20,7 @@ A list with the elements:
 }
 \description{
 Starting with individual-level data on p factors, generate score test statistics for each
-factor for input into GBJ/GHC/HC/BJ/minP.  Also get the correlations between these test statistics. 
+factor for input into GBJ/GHC/HC/BJ/minP.  Also get the correlations between these test statistics.
 Designed to be used with linear or logistic regression null models.
 }
 \examples{

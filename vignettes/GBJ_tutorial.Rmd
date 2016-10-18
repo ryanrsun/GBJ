@@ -39,7 +39,7 @@ smaller, predefined sets and then apply GBJ multiple times.  For example, in the
 Notable advantages to using GBJ are: 
 
 
-1. A unified and parametric approach to combining sets of correlated test statistics.  This may provide additional power over more ad-hoc or nonparametric procedures that use count or rank procedures.
+1. A statistically justified and parametric approach to combining sets of correlated test statistics.  This may provide additional power over more ad-hoc or nonparametric procedures that use count or rank procedures.
 2. Application is straightfoward. No tuning parameters to select or 'special cases' that require extra wrangling.  It is reasonable to apply GBJ on sets ranging in size from 2 to ~950 factors. 
 
     + Theoretically there is no upper limit, but we are currently bound by the numerical precision in standard C++ routines.  There are plans to remove this obstacle through arbitrary precision libraries.
@@ -69,11 +69,11 @@ $$\text{logit}(\mu_{i}) = \beta_{0} + \beta_{1}*Age_{i} + \beta_{2}*Gender_{i}$$
 
 (actually since we generated the data, we know $\beta_{1}=\beta_{2}=0$, but this is just for illustration)
 
-The function `calc_score_stats()` can be used to calculate score statistics for each of the 50 SNPs.  Under the null, these statistics will have an asymptotic N(0,1) distribution.  If our outcome was continuous and we assumed a linear regression model, then we could still use `calc_score_stats()` with `model_type='linear'`.  Otherwise, if we wish to assume a more unique model, the user will have to calculate their own test statistics (should be asymptotically N(0,1) under the null) for each SNP.
+The function `calc_score_stats()` can be used to calculate score statistics for each of the 50 SNPs.  Under the null, these statistics will have an asymptotic N(0,1) distribution.  If our outcome was continuous and we assumed a linear regression model, then we could still use `calc_score_stats()` with `link_function='linear'`, or if the outcome was non-negative count data and we assume a Poisson regression model, then use `link_function='log'`.  Otherwise, if we wish to assume a more unique model, the user will have to calculate their own test statistics (should be asymptotically N(0,1) under the null) for each SNP.
 
 ```{r}
 null_mod <- glm(cancer_status~age+gender, family=binomial(link="logit"))
-log_reg_stats <- calc_score_stats(null_model=null_mod, factor_matrix=genotype_data, model_type="logistic")
+log_reg_stats <- calc_score_stats(null_model=null_mod, factor_matrix=genotype_data, link_function="logistic")
 log_reg_stats$test_stats
 log_reg_stats$cor_mat[1:5,1:5]
 ```
