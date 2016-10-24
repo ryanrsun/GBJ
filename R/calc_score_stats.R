@@ -4,7 +4,7 @@
 #' factor for input into GBJ/GHC/HC/BJ/minP.  Also get the correlations between these test statistics.
 #' Designed to be used with linear or logistic regression null models.
 #'
-#' @param null_model A fitted R regression model
+#' @param null_model An R regression model fitted using glm().  Do not use lm(), even for linear regression!
 #' @param factor_matrix An n*p matrix with each factor as one column.  There should be no missing data.
 #' @param link_function Either "linear" or "logistic" or "log"
 #'

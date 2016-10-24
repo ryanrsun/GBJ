@@ -12,10 +12,10 @@ to calculate the objective at.}
 
 \item{d}{The total number of test statistics in the set.}
 
-\item{k_vec}{If t_vec is not a vector all of the test statistics, let us know which ordered 
+\item{k_vec}{If t_vec is not a vector all of the test statistics, let us know which ordered
 objective functions we are calculating (can be a vector with the same length as t).}
 
-\item{pairwise_cors}{A vector of all d(d-1)/2 pairwise correlations between the test 
+\item{pairwise_cors}{A vector of all d(d-1)/2 pairwise correlations between the test
 statistics, where d is total number of test statistics in the set.}
 
 \item{offset}{Used if we want to subtract the observed gbj value for uniroot.}

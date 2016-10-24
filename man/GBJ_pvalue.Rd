@@ -11,11 +11,11 @@ GBJ_pvalue(observed_gbj, d, pairwise_cors, times_to_try = 5)
 
 \item{d}{The number of test statistics in the set.}
 
-\item{pairwise_cors}{A vector of all d(d-1)/2 pairwise correlations between the test 
+\item{pairwise_cors}{A vector of all d(d-1)/2 pairwise correlations between the test
 statistics, where d is total number of test statistics in the set.}
 
 \item{times_to_try}{Sometimes the numerical root-finder is finnicky, so we have to give
-it extra chances to try and calculate the p-value if first time is failure.  Recommend 
+it extra chances to try and calculate the p-value if first time is failure.  Recommend
 setting this parameter to 5.}
 }
 \value{

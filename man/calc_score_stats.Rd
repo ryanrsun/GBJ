@@ -7,7 +7,7 @@
 calc_score_stats(null_model, factor_matrix, link_function)
 }
 \arguments{
-\item{null_model}{A fitted R regression model}
+\item{null_model}{An R regression model fitted using glm().  Do not use lm(), even for linear regression!}
 
 \item{factor_matrix}{An n*p matrix with each factor as one column.  There should be no missing data.}
 
