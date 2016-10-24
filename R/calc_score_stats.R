@@ -29,7 +29,7 @@ calc_score_stats <- function(null_model, factor_matrix, link_function) {
 	if (link_function == 'logistic') {
 		W_vec <- fitted_Y * (1-fitted_Y)
 	} else if (link_function == 'linear') {
-		W_vec <- rep(summary(null_model)$sigma^2, nrow(X_mat))
+		W_vec <- rep(summary(null_model)$dispersion, nrow(X_mat))
 	} else if (link_function == 'log') {
 		W_vec <- fitted_Y
 	} else {
