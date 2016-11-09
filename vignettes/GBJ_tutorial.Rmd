@@ -11,7 +11,7 @@ vignette: >
 
 The GBJ package implements the Generalized Berk-Jones (GBJ) test as detailed in:
 
-> "The Generalized Berk-Jones Statistic for Genetic Association Tests, Ryan Sun and Xihong Lin, *in preparation*"
+> "The Generalized Berk-Jones Statistic for Genetic Association Tests, Ryan Sun, Peter Kraft, and Xihong Lin, *in preparation*"
 
 Also included in this package are routines to perform the Generalized Higher Criticism (GHC), Higher Criticism (HC),
 Berk-Jones (BJ), and Minimum p-value (minP) tests.  Some guidance on choosing between these methods (which, in principal,
@@ -96,6 +96,8 @@ minP(test_stats=score_stats, cor_mat=cor_Z)
 
 - To estimate the correlation vector when starting with summary statistics, we have found that a close approximation is given by the correlations of the factors themselves.  For example, suppose we have genetic consortium summary statistics.  We can navigate to the 1000 Genomes website, download the genotype data at each of the SNPs being tested by GBJ (making sure to only use subjects from an ethnicity close to the one studied by the consortium), and then take the sample correlations between the SNPs.  These sample correlations can then be used in the correlation matrix.
 
-- Sometimes test statistics will have an asymptotic distribution that is not N(0,1) under the null.  Generally these statistics can be transformed to p-values, which can then be transformed into standard normal Z-statistics. In transforming from p-values to Z-statistics, remember that GBJ does not distinguish between positive and negative statistics, so an appropriate transformation is Z=qnorm(1-p_value/2).  
+- Sometimes test statistics will have an asymptotic distribution that is not N(0,1) under the null.  Generally these statistics can be transformed to p-values, which can then be transformed into standard normal Z-statistics. In transforming from p-values to Z-statistics, an appropriate transformation is Z=qnorm(1-p_value/2).  
+
+- Limits on the mathematical precision of R and C++ currently limit us somewhat for very large sets and very small p-values.  There are plans to remove these limitations in future iterations of the software by using arbitrary precision libraries, however this has not yet been tested.  At the moment, we limit sets to 900 factors at most.  Also p-values less than $1*10^{(-16)}$ are rounded to this value.  However if your p-values are this low, it is very likely that you will receive a very small set-based p-value even after the rounding.
 
 Questions or novel applications? Please let me know!  Contact information can be found in the package description.
