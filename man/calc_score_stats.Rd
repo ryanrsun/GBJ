@@ -11,7 +11,7 @@ calc_score_stats(null_model, factor_matrix, link_function)
 
 \item{factor_matrix}{An n*p matrix with each factor as one column.  There should be no missing data.}
 
-\item{link_function}{Either "linear" or "logistic" or "log"}
+\item{link_function}{Either "linear" or "logit" or "log"}
 }
 \value{
 A list with the elements:
@@ -21,12 +21,12 @@ A list with the elements:
 \description{
 Starting with individual-level data on p factors, generate score test statistics for each
 factor for input into GBJ/GHC/HC/BJ/minP.  Also get the correlations between these test statistics.
-Designed to be used with linear or logistic regression null models.
+Designed to be used with linear or logistic or log-linear regression null models.
 }
 \examples{
 Y <- rbinom(n=100, size=1, prob=0.5)
 null_mod <- glm(Y~1, family=binomial(link="logit"))
 factor_mat <- matrix(data=rnorm(n=100*5), nrow=100)
-calc_score_stats(null_mod, factor_mat, "logistic")
+calc_score_stats(null_mod, factor_mat, "logit")
 }
 

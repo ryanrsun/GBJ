@@ -73,7 +73,7 @@ The function `calc_score_stats()` can be used to calculate score statistics for 
 
 ```{r}
 null_mod <- glm(cancer_status~age+gender, family=binomial(link="logit"))
-log_reg_stats <- calc_score_stats(null_model=null_mod, factor_matrix=genotype_data, link_function="logistic")
+log_reg_stats <- calc_score_stats(null_model=null_mod, factor_matrix=genotype_data, link_function="logit")
 log_reg_stats$test_stats
 log_reg_stats$cor_mat[1:5,1:5]
 ```

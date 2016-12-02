@@ -2,11 +2,11 @@
 #'
 #' Starting with individual-level data on p factors, generate score test statistics for each
 #' factor for input into GBJ/GHC/HC/BJ/minP.  Also get the correlations between these test statistics.
-#' Designed to be used with linear or logistic regression null models.
+#' Designed to be used with linear or logistic or log-linear regression null models.
 #'
 #' @param null_model An R regression model fitted using glm().  Do not use lm(), even for linear regression!
 #' @param factor_matrix An n*p matrix with each factor as one column.  There should be no missing data.
-#' @param link_function Either "linear" or "logistic" or "log"
+#' @param link_function Either "linear" or "logit" or "log"
 #'
 #' @return A list with the elements:
 #' \item{test_stats}{The p score test statistics.}
@@ -17,7 +17,7 @@
 #' Y <- rbinom(n=100, size=1, prob=0.5)
 #' null_mod <- glm(Y~1, family=binomial(link="logit"))
 #' factor_mat <- matrix(data=rnorm(n=100*5), nrow=100)
-#' calc_score_stats(null_mod, factor_mat, "logistic")
+#' calc_score_stats(null_mod, factor_mat, "logit")
 
 calc_score_stats <- function(null_model, factor_matrix, link_function) {
 
@@ -26,7 +26,7 @@ calc_score_stats <- function(null_model, factor_matrix, link_function) {
 	actual_Y <- null_model$y
 
 	# Only difference between linear and logistic procedure
-	if (link_function == 'logistic') {
+	if (link_function == 'logit') {
 		W_vec <- fitted_Y * (1-fitted_Y)
 	} else if (link_function == 'linear') {
 		W_vec <- rep(summary(null_model)$dispersion, nrow(X_mat))
