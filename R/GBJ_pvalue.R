@@ -64,7 +64,7 @@ GBJ_pvalue <- function(observed_gbj, d, pairwise_cors, times_to_try=5)
 		# If eFlag still 1, then we tried multiple times times with no success.
 		if(eFlag==1)
 		{
-			return ( list(GBJ_corp=(999), eFlag=eFlag) )
+			return ( list(GBJ_corp=NA, eFlag=eFlag) )
 		}
 
 		# Only need the first half

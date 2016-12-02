@@ -47,7 +47,16 @@ calc_score_stats <- function(null_model, factor_matrix, link_function) {
 		{
 			tempF<- factor_matrix[,kkk]
 			score_num <- t(tempF) %*% (actual_Y-fitted_Y)
-			score_denom <- sqrt(sig_sq_hat * (sum(tempF^2) - mean(tempF)^2*num_sub))
+			score_denom <- tryCatch(sqrt(sig_sq_hat * (sum(tempF^2) - mean(tempF)^2*num_sub)),
+			                        warning=function(w) w, error=function(e) e)
+
+			# We've been getting negative denominators with, for example, very rare SNPs
+			if (length(class(score_denom)) > 1) {
+			  err_msg <- paste('Error in calculating test statistic for factor ', kkk,
+			                   ' possibly it is constant?  Try removing and rerunning.', sep='')
+			  stop(err_msg)
+			}
+
 			denominators[kkk] <- score_denom
 			test_stats[kkk] <- score_num / score_denom
 		}
@@ -71,7 +80,16 @@ calc_score_stats <- function(null_model, factor_matrix, link_function) {
 		# Pick out next SNP, conduct score test (no additional covariates).
 		tempF <- factor_matrix[,kkk]
 		score_num <- t(tempF) %*% (actual_Y-fitted_Y)
-		score_denom <- sqrt(tempF %*% P_mat %*% tempF)
+		score_denom <- tryCatch(sqrt(tempF %*% P_mat %*% tempF), warning=function(w) w,
+		                        error=function(e) e)
+
+		# We've been getting negative denominators with, for example, very rare SNPs
+		if (length(class(score_denom)) > 1) {
+		    err_msg <- paste('Error in calculating test statistic for factor ', kkk,
+		                     ' - possibly it is constant?  Try removing and rerunning.', sep='')
+		    stop(err_msg)
+		}
+
 		test_stats[kkk] <- score_num / score_denom
 		denominators[kkk] <- score_denom
 	}
