@@ -54,6 +54,8 @@ GBJ <- function(test_stats, cor_mat=NULL, pairwise_cors=NULL)
 	GBJ_p_list <- GBJ_pvalue(observed_gbj=gbj, d=d, pairwise_cors=pairwise_cors)
 	GBJ_corp=GBJ_p_list$GBJ_corp
 
+	if (is.na(GBJ_corp) & gbj >= 20) {GBJ_corp="<1*10^(-12)"}
+
 	return ( list(GBJ=gbj, GBJ_pvalue=GBJ_corp) )
 }
 
