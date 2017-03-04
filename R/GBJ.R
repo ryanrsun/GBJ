@@ -13,6 +13,11 @@
 #' \item{GBJ}{The observed Generalized Higher Criticism test statistic.}
 #' \item{GBJ_pvalue}{The p-value of this observed value, given the size of the set and
 #' correlation structure.}
+#' \item{err_code}{Sometimes if your p-value is very small (<10^(-12) usually), R/C++ do not
+#' have enough precision in their standard routines to calculate the number accurately. In
+#' these cases (and very rarely others) we switch to standard Berk-Jones instead (more stable
+#' numerically) and let you know with a message here.}
+#'
 #'
 #' @import stats BH
 #' @importFrom Rcpp evalCpp
@@ -37,14 +42,11 @@ GBJ <- function(test_stats, cor_mat=NULL, pairwise_cors=NULL)
   pairwise_cors <- param_list$pairwise_cors
   d <- length(t_vec)
 
-	# Sometimes test stats are too big for R's precision
-	too_big <- which(t_vec > 8.2)
-	if (length(too_big) > 0) {t_vec[too_big] <- 8.2}
-
-	# Correct number of pairwise correlations?
-	if (length(pairwise_cors) != d*(d-1)/2) {
-		stop("Your pairwise correlation vector is of the wrong length!")
-	}
+  # Move to BJ if no correlation at all
+  if (sum(abs(pairwise_cors)) == 0) {
+    BJ_output <- BJ(test_stats=t_vec, pairwise_cors=pairwise_cors)
+    return ( list(GBJ=BJ_output$BJ, GBJ_pvalue=BJ_output$BJ_pvalue) )
+  }
 
 	# Calculate the observed GBJ statistic
 	GBJ_stats <- GBJ_objective(t_vec=t_vec, d=d, pairwise_cors=pairwise_cors)
@@ -54,8 +56,31 @@ GBJ <- function(test_stats, cor_mat=NULL, pairwise_cors=NULL)
 	GBJ_p_list <- GBJ_pvalue(observed_gbj=gbj, d=d, pairwise_cors=pairwise_cors)
 	GBJ_corp=GBJ_p_list$GBJ_corp
 
-	if (is.na(GBJ_corp) & gbj >= 20) {GBJ_corp="<1*10^(-12)"}
+	# If we get NA for the p-value, don't want to return NA to the user
+	if (is.na(GBJ_corp)) {
+	  # If gbj >= 20, give them the BJ p-value with a disclaimer
+	  if (gbj >= 20) {
+	    BJ_output <- BJ(test_stats=t_vec, pairwise_cors=pairwise_cors)
+	    GBJ_err_code <- '1: Pvalue likely less than 10^(-12), R/C++ not enough precision. Returning standard Berk-Jones test instead.'
+	    return ( list(GBJ=BJ_output$BJ, GBJ_pvalue=BJ_output$BJ_pvalue, err_code=GBJ_err_code) )
+	  }
 
-	return ( list(GBJ=gbj, GBJ_pvalue=GBJ_corp) )
+	  # If evidence of underdispersion, again give them BJ p-value
+	  else if (sum(pairwise_cors) < 0) {
+	    BJ_output <- BJ(test_stats=t_vec, pairwise_cors=pairwise_cors)
+	    GBJ_err_code <- '2: Error in numerical routines. Many apologies, please report to developer! Returning standard Berk-Jones test instead.'
+	    return ( list(GBJ=BJ_output$BJ, GBJ_pvalue=BJ_output$BJ_pvalue, err_code=GBJ_err_code) )
+	  }
+
+	  # Any other errors, give them BJ p-value
+	  else {
+	    BJ_output <- BJ(test_stats=t_vec, pairwise_cors=pairwise_cors)
+	    GBJ_err_code <- '3: Unknown error. Many apologies, please report to developer! Returning standard Berk-Jones test instead.'
+	    return ( list(GBJ=BJ_output$BJ, GBJ_pvalue=BJ_output$BJ_pvalue, err_code=GBJ_err_code) )
+	  }
+	}
+
+	# If no NA in the p-value, then everything success and return GBJ output.
+	return ( list(GBJ=gbj, GBJ_pvalue=GBJ_corp, err_code=0) )
 }
 

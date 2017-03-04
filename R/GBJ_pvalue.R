@@ -37,8 +37,12 @@ GBJ_pvalue <- function(observed_gbj, d, pairwise_cors, times_to_try=5)
 			GBJ_z_bounds <- rep(NA,d)
 
 			# Sometimes starting too high gives an error
-			if (times_tried == (times_to_try-1)) {
+			if (times_tried == 2) {
 			  prev_bound <- 5
+			} else if (times_tried == 3) {
+			  prev_bound <- 3
+			} else if (times_tried == 4) {
+			  prev_bound <- 1
 			} else {
 			  prev_bound <- 8.2
 			}

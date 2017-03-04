@@ -13,6 +13,10 @@
 #' \item{GHC}{The observed Generalized Higher Criticism test statistic.}
 #' \item{GHC_pvalue}{The p-value of this observed value, given the size of the set and
 #' correlation structure.}
+#'  \item{err_code}{Sometimes if your p-value is very small (<10^(-12) usually), R/C++ do not
+#' have enough precision in their standard routines to calculate the number accurately. In
+#' these cases (and very rarely others) we switch to standard Higher Criticism instead (more stable
+#' numerically) and let you know with a message here.}
 #'
 #' @export
 #' @examples
@@ -32,6 +36,12 @@ GHC <- function(test_stats, cor_mat=NULL, pairwise_cors=NULL)
   t_vec <- param_list$t_vec
   pairwise_cors <- param_list$pairwise_cors
   d <- length(t_vec)
+
+  # Move to BJ if no correlation at all
+  if (sum(abs(pairwise_cors)) == 0) {
+    HC_output <- HC(test_stats=t_vec, pairwise_cors=pairwise_cors)
+    return ( list(GHC=HC_output$HC, GHC_pvalue=HC_output$HC_pvalue) )
+  }
 
 	# Calculate GHC objectives
 	i_vec <- 1:d
@@ -92,6 +102,31 @@ GHC <- function(test_stats, cor_mat=NULL, pairwise_cors=NULL)
 		GHC_corp <- ebb_crossprob_cor_R(d=d, bounds=GHC_z_bounds, correlations=pairwise_cors)
 	}
 
-	return ( list(GHC=ghc, GHC_pvalue=GHC_corp) )
+	# If we get NA for the p-value, don't want to return NA to the user
+	if (is.na(GHC_corp)) {
+	  # If gbj >= 250,000, give them the HC p-value with a disclaimer
+	  if (ghc >= 20) {
+	    HC_output <- HC(test_stats=t_vec, pairwise_cors=pairwise_cors)
+	    GHC_err_code <- '1: Pvalue likely less than 10^(-12), R/C++ not enough precision. Returning standard Higher Criticism test instead.'
+	    return ( list(GHC=HC_output$HC, GHC_pvalue=HC_output$HC_pvalue, err_code=GHC_err_code) )
+	  }
+
+	  # If evidence of underdispersion, again give them BJ p-value
+	  else if (sum(pairwise_cors) < 0) {
+	    HC_output <- BJ(test_stats=t_vec, pairwise_cors=pairwise_cors)
+	    GHC_err_code <- '2: Error in numerical routines. Many apologies, please report to developer! Returning standard Higher Criticism test instead.'
+	    return ( list(GHC=HC_output$HC, GHC_pvalue=HC_output$HC_pvalue, err_code=GHC_err_code) )
+	  }
+
+	  # Any other errors, give them BJ p-value
+	  else {
+	    HC_output <- BJ(test_stats=t_vec, pairwise_cors=pairwise_cors)
+	    GHC_err_code <- '3: Unknown error. Many apologies, please report to developer! Returning standard Higher Criticism test instead.'
+	    return ( list(GHC=HC_output$HC, GHC_pvalue=HC_output$HC_pvalue, err_code=GHC_err_code) )
+	  }
+	}
+
+
+	return ( list(GHC=ghc, GHC_pvalue=GHC_corp, err_code=0) )
 }
 
