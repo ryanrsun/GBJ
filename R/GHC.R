@@ -54,7 +54,7 @@ GHC <- function(test_stats, cor_mat=NULL, pairwise_cors=NULL)
 
 	# Calculate p-value
 	if (ghc <= 0) {
-		return (list(GHC=ghc, GHC_pvalue=1))
+		return (list(GHC=ghc, GHC_pvalue=1, err_code=0))
 	}
 
 	# GHC bounds
@@ -74,9 +74,27 @@ GHC <- function(test_stats, cor_mat=NULL, pairwise_cors=NULL)
 				pairwise_cors=pairwise_cors, lower=GHC_lowerbound, upper=(1-10^(-12)),
 				tol=(10^(my_tol))), error=function(e) e, warning=function(w) w)
 
-		# if it doesn't work, just return NA for the p-value
+		# If it doesn't work, just run the HC for them
 		if(length(class(temp_ghc))>1) {
-			return (list(GHC=ghc, GHC_pvalue=NA))
+		  if (ghc >= 200000) {
+		    HC_output <- HC(test_stats=t_vec, pairwise_cors=pairwise_cors)
+		    GHC_err_code <- '1: Pvalue likely less than 10^(-12), R/C++ not enough precision. Returning standard Higher Criticism test instead.'
+		    return ( list(GHC=HC_output$HC, GHC_pvalue=HC_output$HC_pvalue, err_code=GHC_err_code) )
+		  }
+
+		  # If evidence of underdispersion, again give them BJ p-value
+		  else if (sum(pairwise_cors) < 0) {
+		    HC_output <- HC(test_stats=t_vec, pairwise_cors=pairwise_cors)
+		    GHC_err_code <- '2: Error in numerical routines. Many apologies, please report to developer! Returning standard Higher Criticism test instead.'
+		    return ( list(GHC=HC_output$HC, GHC_pvalue=HC_output$HC_pvalue, err_code=GHC_err_code) )
+		  }
+
+		  # Any other errors, give them BJ p-value
+		  else {
+		    HC_output <- HC(test_stats=t_vec, pairwise_cors=pairwise_cors)
+		    GHC_err_code <- '3: Unknown error. Many apologies, please report to developer! Returning standard Higher Criticism test instead.'
+		    return ( list(GHC=HC_output$HC, GHC_pvalue=HC_output$HC_pvalue, err_code=GHC_err_code) )
+		  }
 		}
 
 		# It worked, keep going
@@ -113,14 +131,14 @@ GHC <- function(test_stats, cor_mat=NULL, pairwise_cors=NULL)
 
 	  # If evidence of underdispersion, again give them BJ p-value
 	  else if (sum(pairwise_cors) < 0) {
-	    HC_output <- BJ(test_stats=t_vec, pairwise_cors=pairwise_cors)
+	    HC_output <- HC(test_stats=t_vec, pairwise_cors=pairwise_cors)
 	    GHC_err_code <- '2: Error in numerical routines. Many apologies, please report to developer! Returning standard Higher Criticism test instead.'
 	    return ( list(GHC=HC_output$HC, GHC_pvalue=HC_output$HC_pvalue, err_code=GHC_err_code) )
 	  }
 
 	  # Any other errors, give them BJ p-value
 	  else {
-	    HC_output <- BJ(test_stats=t_vec, pairwise_cors=pairwise_cors)
+	    HC_output <- HC(test_stats=t_vec, pairwise_cors=pairwise_cors)
 	    GHC_err_code <- '3: Unknown error. Many apologies, please report to developer! Returning standard Higher Criticism test instead.'
 	    return ( list(GHC=HC_output$HC, GHC_pvalue=HC_output$HC_pvalue, err_code=GHC_err_code) )
 	  }
