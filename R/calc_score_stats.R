@@ -22,6 +22,7 @@
 calc_score_stats <- function(null_model, factor_matrix, link_function) {
 
 	X_mat <- model.matrix(null_model)
+	d <- ncol(factor_matrix)
 	fitted_Y <- null_model$fitted.values
 	actual_Y <- null_model$y
 
@@ -38,7 +39,7 @@ calc_score_stats <- function(null_model, factor_matrix, link_function) {
 
 	########################
 	# EZ Mode if linear regression, no additional covariates except for intercept
-	if (link_function == 'linear' & formula(null_model) == "Y ~ 1") {
+	if (link_function == 'linear' & ncol(model.matrix(null_model)) == 1) {
 		num_sub <- nrow(X_mat)
 		sig_sq_hat <- sum( (actual_Y - fitted_Y)^2 ) / (num_sub-1)
 		test_stats <- rep(NA, d)
@@ -72,7 +73,6 @@ calc_score_stats <- function(null_model, factor_matrix, link_function) {
 	P_mat <- W_mat - W_mat%*%X_mat %*% solve(t(X_mat)%*%W_mat%*%X_mat) %*% t(X_mat)%*%W_mat
 
 	# Now our score test
-	d <- ncol(factor_matrix)
 	test_stats <- rep(NA, d)
 	denominators <- rep(NA, d)
 	for(kkk in 1:d)
