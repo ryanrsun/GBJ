@@ -20,6 +20,10 @@ A list with the elements:
 \item{GHC}{The observed Generalized Higher Criticism test statistic.}
 \item{GHC_pvalue}{The p-value of this observed value, given the size of the set and
 correlation structure.}
+ \item{err_code}{Sometimes if your p-value is very small (<10^(-12) usually), R/C++ do not
+have enough precision in their standard routines to calculate the number accurately. In
+these cases (and very rarely others) we switch to standard Higher Criticism instead (more stable
+numerically) and let you know with a message here.}
 }
 \description{
 Given a vector of individual test statistics and their pairwise correlations, calculate

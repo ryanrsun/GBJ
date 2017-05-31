@@ -38,7 +38,7 @@ HC <- function(test_stats, cor_mat=NULL, pairwise_cors=NULL) {
 	HC_stats <- sqrt(d) * (i_vec/d - p_values) / sqrt(p_values*(1-p_values))
 
 	# Observed HC statistic
-	h <- max(HC_stats)
+	h <- max(HC_stats, na.rm=TRUE)
 
 	# Calculate p-value
 	if (h<=0) {
