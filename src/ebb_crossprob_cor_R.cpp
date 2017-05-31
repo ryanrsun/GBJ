@@ -41,32 +41,67 @@
 
 using namespace Rcpp;
 
+inline double fast_square(const double &x);
+inline double fast_cube(const double &x);
+inline double dnorm(const double &x);
+inline double surv(const double &x);
+
+bool create_logftable(const int &d, std::vector<double> &log_ftable);
+bool create_rtable(const int &d,
+                   const std::vector<double> &r_vec,
+                   std::vector< std::vector<double> >&rtable);
+bool create_hermtable(const int &d,
+                      const std::vector <double> &t_vec,
+                      std::vector<std::vector<double> > &herm_table);
+bool avg_cond_covar(const int &d,
+                    const std::vector<double> &t_vec,
+                    const std::vector<std::vector<double> > &r_table,
+                    const std::vector<std::vector<double> > &herm_table,
+                    std::vector<double> &covar_vec);
+bool eval_EBB_PMF_allN(const int &max_n,
+                       int &y,
+                       const double &lambda,
+                       const double &gamma,
+                       std::vector<double> &PMF_vec);
+double calc_qka(const int &d,
+                const int &k,
+                const int &a,
+                const std::vector<double> &prev_row,
+                const std::vector<double> &log_ftable,
+                const bool &ind_flag,
+                const double &lambda,
+                const double &gamma);
+double calc_allq(const int &d,
+                 const std::vector <double> &t_vec,
+                 const std::vector <double> &r_vec,
+                 const bool &ind_flag);
+
 
 ////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////
 
 
 // To square a number faster than pow().
-inline double fast_square(const double & x)
+inline double fast_square(const double &x)
 {
     return (x*x);
 }
 
 // To cube a number faster than pow().
-inline double fast_cube(const double & x)
+inline double fast_cube(const double &x)
 {
     return (x*x*x);
 }
 
 // PDF of a standard normal RV.
-inline double dnorm(const double & x)
+inline double dnorm(const double &x)
 {
     return (exp(-fast_square(x) / 2.0) /
             sqrt(2.0*boost::math::constants::pi<long double>()));
 }
 
 // Survival function of a standard normal, 1-F_x(x)
-inline double surv(const double & x)
+inline double surv(const double &x)
 {
     return (1 - 0.5 * erfc(-x/sqrt(2.0)));
 }
@@ -76,9 +111,10 @@ inline double surv(const double & x)
 ////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////
 
+
 // For the independence case, good to have lookup table of log-factorials
 // Assume d doesn't go past the limit of 'int,' which is 32,767.
-bool create_logftable(const int & d, std::vector<double> & log_ftable)
+bool create_logftable(const int &d, std::vector<double> &log_ftable)
 {
     // 0! = 1! = 1
     log_ftable[0] = 0.0;
@@ -94,9 +130,9 @@ bool create_logftable(const int & d, std::vector<double> & log_ftable)
 
 // Create a d(d-1)/2 by 5 table of each \rho_ij to the 2/4/6/8/10 power.
 // These are reused d times in the calculation of the variance of S(t).
-bool create_rtable(const int & d,
-                   const std::vector <double> & r_vec,
-                   std::vector< std::vector<double> > & r_table)
+bool create_rtable(const int &d,
+                   const std::vector <double> &r_vec,
+                   std::vector< std::vector<double> > &r_table)
 {
     long double num_cor = d*(d-1)/2;
     std::vector <double> r_two(num_cor);
@@ -124,14 +160,19 @@ bool create_rtable(const int & d,
     return 0;
 }
 
+
 // Create a d*5 matrix holding the values of the 2/4/6/8/10th Hermite polynomials
 // evaluated at t_k from k=1,...,d.
 // Each value will be reused d(d-1)/2 times in the calculation of the variance of S(t).
 // We also pre-divide each of the He_(2n-1) terms by (2n!) to save a little more time.
-bool create_hermtable(const int & d,
-                      const std::vector <double> & t_vec,
-                      std::vector<std::vector<double> > & herm_table)
+bool create_hermtable(const int &d,
+                      const std::vector <double> &t_vec,
+                      std::vector<std::vector<double> > &herm_table)
 {
+    /*
+     // Could check here if same t, then don't need to do the calculations
+     */
+
     // Hold each of the five Hermite polynomial terms.
     std::vector <double> herm_one(d);
     std::vector <double> herm_two(d);
@@ -161,14 +202,26 @@ bool create_hermtable(const int & d,
 }
 
 
+
 // Calculate the average conditional covariance term, P(|Z_i|,|Z_j| >= t_k)
 // for k=1,...,d.
-bool avg_cond_covar(const int & d,
-                    const std::vector<double> & t_vec,
-                    const std::vector< std::vector<double> > & r_table,
-                    const std::vector< std::vector<double> > & herm_table,
-                    std::vector< double > & covar_vec)
+bool avg_cond_covar(const int &d,
+                    const std::vector<double> &t_vec,
+                    const std::vector< std::vector<double> > &r_table,
+                    const std::vector< std::vector<double> > &herm_table,
+                    std::vector< double > &covar_vec)
 {
+
+    /*
+     // Could actually do this for all k=1:d and a=1:k.
+     // Right now just do the same for all k,a
+     // Right now indexed by t_1,....,t_d
+     // But it wouldn't be so much harder, just keep the terms we have now
+     // and do some additional multiplications/divisions.
+     // O(d^2) instead of O(d) but the operations are very simple multiplications)
+     */
+
+
     // Numerator and denominator vectors for the tricky infinite sum in the variance.
     double num_cor = d*(d-1)/2;
     double cond_mean_sq = 0.0;
@@ -179,6 +232,12 @@ bool avg_cond_covar(const int & d,
     double sum_term = 0.0;
     double surv_term = 4 * fast_square( surv(t_vec[0]) );
     double phi_term = 4 * fast_square( dnorm(t_vec[0]) );
+
+    /*
+     // Could pull out the surv_term and phi_term from the sum, don't have to add them every time
+     */
+
+
     for (long cor_it=0; cor_it<num_cor; ++cor_it)
     {
         numerator_vec[cor_it] = surv_term + phi_term *
@@ -228,6 +287,7 @@ bool avg_cond_covar(const int & d,
     return 0;
 }
 
+
 // Evaluate the EBB PMF for a range of n, so we don't have to repeat
 // multiplications for Pr[S(t_k)=a|S(t_k-1)=m] for m=a:(d-k+1).  Here 'y' is a.
 bool eval_EBB_PMF_allN(const int & max_n,
@@ -236,69 +296,78 @@ bool eval_EBB_PMF_allN(const int & max_n,
                        const double & gamma,
                        std::vector<double> & PMF_vec)
 {
-    // If (d-k+1) <=1 then we don't need to do these calculations.
+    // If (d-k+1) <=1 then we don't need to do these calculations
+    // because we will be using straight binomial calculation for
+    // P(S(t)=a|m=0 or 1).
     if (max_n < 2) { return 0;}
 
-    double prob_mass = 1.0;
-    double min_n;
-    if (y < 2)        // Here y=0/1 and max_n >= 2; can fill the 0/1 slots of PMF with nonsense.
-    {
-        PMF_vec[0] = 0.0;
-        PMF_vec[1] = 0.0;
+    double log_prob_mass = 0.0;
 
-        if (y == 0)
+    // We only need to fill PMF_vec from a (or 'y' as it's called here)
+    // to d-k+1.
+    // The EBB pmf has a product with a terms, a product with d-a terms, and a product
+    // with d terms.
+    // We don't need to fill PMF_vec[0] or PMF_vec[1] ever because P(S(t)=a|m=0/1) always
+    // uses straight binomial.
+    // We don't need to fill PMF_vec for any indices less than 'y' because m has to be
+    // greater than a.
+
+    // The case of y=(d-k+1) has only two products, treat it differently
+    // The case of y=0 is special because then we only have two products; treat it differently.
+    if (y == max_n)
+    {
+        for (int jjj=0; jjj<max_n; ++jjj)
         {
-            prob_mass = (1-lambda) * (1-lambda+gamma) / (1+gamma);      // For a=0 and m=2:(d-k+1)
-        } else if (y == 1)
-        {
-            prob_mass = lambda * (1-lambda) / (1+gamma);                // For a=1 and m=2:(d-k+1)
+            log_prob_mass += std::log(lambda+gamma*jjj) - std::log(1+gamma*jjj);
         }
 
-        // Start the next phase at y=2.
-        min_n = 2;
-        PMF_vec[2] = prob_mass;
-    }
-    else
-    {
-        // Here we just do one calculation and finish.
-        for (int iii=0; iii<y; ++iii)
-        {
-            prob_mass = prob_mass * (lambda+gamma*iii) / (1+gamma*iii);
-        }
-        PMF_vec[y] = prob_mass;
-        min_n = y;
-    }
-
-    if (min_n == max_n)             // Done if a=(d-k+1).
-    {
+        // Only need to fill the one entry of PMF_vec if a=(d-k+1)
+        PMF_vec[y] = log_prob_mass;
         return 0;
-    }
 
-    // Not done, a<(d-k+1).
-    int n_diff = max_n - min_n;
-    for (int jjj=1; jjj<=n_diff; ++jjj)             // One multiplication and store for each j.
+    } else if (y == 0)          // Again only two products
     {
-        prob_mass = prob_mass * (1-lambda+gamma*(min_n-y-1+jjj)) / (1+gamma*(min_n-1+jjj));
-        PMF_vec[min_n+jjj] = prob_mass;
+        for (int jjj=0; jjj<max_n; ++jjj)
+        {
+            log_prob_mass += std::log(1 - lambda + gamma*jjj) - std::log(1 + gamma*jjj);
+            PMF_vec[jjj+1] = log_prob_mass;
+        }
+        return 0;
+
+    } else {                    // Normal three products
+        // Get two of the products here, the (v-1) and (part of) the (d-1).
+        // Don't need to fill PMF_vec for this part since m>=a always.
+        for (int jjj=0; jjj<y; ++jjj)
+        {
+            log_prob_mass += std::log(lambda + gamma*jjj) - std::log(1 + gamma*jjj);
+        }
+        PMF_vec[y] = log_prob_mass;
+        // Get the rest of (d-1) and also the (d-v-1) product
+        for (int jjj=y; jjj<max_n; ++jjj)
+        {
+            log_prob_mass += std::log(1 - lambda + gamma*(jjj-y)) - std::log(1 + gamma*jjj);
+            PMF_vec[jjj+1] = log_prob_mass;
+        }
     }
 
     return 0;
 }
 
+
 // Calculate q_k,a by summing over q_k,a|S(t)=m for m=a:(d-k)
-double calc_qka(const int & d,
-                const int & k,
-                const int & a,
-                const std::vector<double> & prev_row,
-                const std::vector<double> & log_ftable,
-                const bool & ind_flag,
-                const double & lambda,
-                const double & gamma)
+double calc_qka(const int &d,
+                const int &k,
+                const int &a,
+                const std::vector<double> &prev_row,
+                const std::vector<double> &log_ftable,
+                const bool &ind_flag,
+                const double &lambda,
+                const double &gamma)
 {
-    double q_ka = 0.0;
     double min_gamma;
-    double m_choose_a;
+    double log_m_choose_a;
     std::vector<double> PMF_vec(d+1);
+    std::vector<double> log_qka_calc_vec(d+k-1 - a + 1);
 
     // To hold the the EBB probability (w/o factorial part) for m=a:(d-k+1)
     if (!ind_flag)
@@ -308,40 +377,56 @@ double calc_qka(const int & d,
                                                 lambda,
                                                 gamma,
                                                 PMF_vec);
-
-         if (all_EBB_status)
-    	{
-    		return(-1);
-   	 	}
     }
 
     // Sum over all possible values of S(t)=m
+    double max_value = 0.0;
     for (int mmm=a; mmm<=(d-k+1); ++mmm)
     {
-        m_choose_a = std::exp( log_ftable[mmm] - log_ftable[a] - log_ftable[mmm-a] );
+        log_m_choose_a = log_ftable[mmm] - log_ftable[a] - log_ftable[mmm-a];
 
         // Use binomial if m=0/1 or if independence flag or if gamma outside parameter space.
         min_gamma = std::max(-lambda/(mmm-1), -(1-lambda)/(mmm-1));
         if (mmm<=1 || ind_flag || gamma<min_gamma)
         {
-            q_ka += prev_row[mmm] * m_choose_a * pow(lambda, a) * pow((1.0-lambda), (mmm-a));
+            log_qka_calc_vec[mmm-a] = prev_row[mmm] + log_m_choose_a + a*std::log(lambda) + (mmm-a)*std::log(1.0-lambda);
         }
         else          // EBB PMF
         {
-            q_ka += prev_row[mmm] * m_choose_a * PMF_vec[mmm];
+            log_qka_calc_vec[mmm-a] = prev_row[mmm] + log_m_choose_a + PMF_vec[mmm];
+        }
+
+        // Check for max value
+        if (log_qka_calc_vec[mmm-a] > max_value) {
+            max_value = log_qka_calc_vec[mmm-a];
         }
     }
 
-    return q_ka;
+    // Different for k=1 because no way to represent log(0)
+    if (k == 1)
+    {
+        return log_qka_calc_vec[d-k+1-a];
+    }
+
+    // LogSumExp procedure
+    double sum_term = 0.0;
+    for (int mmm=a; mmm<=(d-k+1); ++mmm)
+    {
+        sum_term += std::exp(log_qka_calc_vec[mmm-a] - max_value);
+    }
+    return max_value + std::log(sum_term);
 }
 
+
+
+
 // The p-value calculation 'master' function, the interface between the math and main fn.
-// Loop through all k, calculatin q_k,a from a=0:(t-k) until we get to q_d,0/
+// Loop through all k, calculating q_k,a from a=0:(t-k) until we get to q_d,0/
 // Return the p-value.
-double calc_allq(const int & d,
-                 const std::vector <double> & t_vec,
-                 const std::vector <double> & r_vec,
-                 const bool & ind_flag)
+double calc_allq(const int &d,
+                 const std::vector <double> &t_vec,
+                 const std::vector <double> &r_vec,
+                 const bool &ind_flag)
 {
     // Fill the d(d-1)/2 by 5 table of correlations to the 2/4/6/8/10 power.
     // Fill the d*5 table of Hermite polynomial terms in the S(t) conditional variance calculation.
@@ -365,10 +450,6 @@ double calc_allq(const int & d,
     std::vector<double> log_ftable(d+1);
     bool filled_logftable = create_logftable(d,
                                              log_ftable);
-    if (filled_logftable)
-    {
-    	return(-1);
-    }
 
     // Calculate the conditional average pairwise correlation for k=1,...,d.
     std::vector<double> covar_vec(d);
@@ -390,7 +471,7 @@ double calc_allq(const int & d,
 
     // Initial conditions.
     double prev_bound = 0.0;
-    current_row[d] = 1.0;
+    current_row[d] = 0.0;
 
     // Loop through k=1,...,d.
     double lambda = 1.0;
@@ -405,7 +486,7 @@ double calc_allq(const int & d,
         // If new bound same as previous bound (make sure tolerance is same as match_moments).
         if (fabs(t_vec[kkk-1] - prev_bound) < pow(10.0, -8.0))
         {
-            current_row[d-kkk+1] = 0.0;
+            current_row[d-kkk+1] = 0.0;             // We don't actually need to zero it out since we never get here.
             prev_bound = t_vec[kkk-1];
             continue;
         }
@@ -438,8 +519,9 @@ double calc_allq(const int & d,
         prev_bound = t_vec[kkk-1];
     }
 
-    return (1-current_row[0]);
+    return (1-std::exp(current_row[0]));
 }
+
 
 
 ////////////////////////////////////////////////////////////////////////
