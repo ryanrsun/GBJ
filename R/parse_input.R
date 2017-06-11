@@ -20,7 +20,7 @@
 parse_input <- function(test_stats, cor_mat=NULL, pairwise_cors=NULL) {
 
   # Limit the size of sets to 900 factors
-  if (length(test_stats) > 900) {stop('You have too many factors, please restrict to 900')}
+  if (length(test_stats) > 2000) {stop('You have too many factors, please restrict to 2000')}
 
 	# Ensure that the thresholds are sorted in descending order, largest first.
 	t_vec <- sort(abs(test_stats), decreasing=TRUE)
