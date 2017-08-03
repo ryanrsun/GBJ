@@ -2,6 +2,6 @@
 # Generator token: 10BE3573-1514-4C36-9D1C-5A225CD40393
 
 ebb_crossprob_cor_R <- function(d, bounds, correlations) {
-    .Call('GBJ_ebb_crossprob_cor_R', PACKAGE = 'GBJ', d, bounds, correlations)
+    .Call('_GBJ_ebb_crossprob_cor_R', PACKAGE = 'GBJ', d, bounds, correlations)
 }
 

@@ -7,7 +7,7 @@ using namespace Rcpp;
 
 // ebb_crossprob_cor_R
 double ebb_crossprob_cor_R(int d, NumericVector bounds, NumericVector correlations);
-RcppExport SEXP GBJ_ebb_crossprob_cor_R(SEXP dSEXP, SEXP boundsSEXP, SEXP correlationsSEXP) {
+RcppExport SEXP _GBJ_ebb_crossprob_cor_R(SEXP dSEXP, SEXP boundsSEXP, SEXP correlationsSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -17,4 +17,14 @@ BEGIN_RCPP
     rcpp_result_gen = Rcpp::wrap(ebb_crossprob_cor_R(d, bounds, correlations));
     return rcpp_result_gen;
 END_RCPP
+}
+
+static const R_CallMethodDef CallEntries[] = {
+    {"_GBJ_ebb_crossprob_cor_R", (DL_FUNC) &_GBJ_ebb_crossprob_cor_R, 3},
+    {NULL, NULL, 0}
+};
+
+RcppExport void R_init_GBJ(DllInfo *dll) {
+    R_registerRoutines(dll, NULL, CallEntries, NULL, NULL);
+    R_useDynamicSymbols(dll, FALSE);
 }
