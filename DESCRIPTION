@@ -8,8 +8,7 @@ Description: Computes the Generalized Berk-Jones (GBJ) statistic for set-based i
 Imports:
     Rcpp (>= 0.12.7),
     stats,
-    BH
-LinkingTo: Rcpp
+LinkingTo: Rcpp, BH
 License: GPL-3
 RoxygenNote: 5.0.1
 Suggests: knitr,
