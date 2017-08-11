@@ -4,7 +4,8 @@
 #' This version of the function assumes you are using GWAS summary statistics.
 #' If you individual-level genotype data, use omni_individual().
 #'
-#' @param test_stats Vector of all individual (first-level) test statistics
+#' @param test_stats Vector of test statistics for each factor in the set (i.e. marginal
+#' test statistic for each SNP in a gene)
 #' @param cor_mat d*d matrix of the correlations between all the test statistics in
 #' the set, where d is the total number of test statistics in the set.
 #' @param num_boots Number of bootstrap repetitions to find correlation matrix of set-based statistics.
