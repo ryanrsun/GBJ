@@ -3,11 +3,13 @@
 #' Given a vector of individual test statistics and their pairwise correlations, calculate
 #' the Generalized Higher Criticism (GHC) second-level test statistic and it's p-value.
 #'
-#' @param test_stats Vector of all individual (first-level) test statistics
+#' @param test_stats Vector of test statistics for each factor in the set (i.e. marginal
+#' test statistic for each SNP in a gene)
 #' @param cor_mat d*d matrix of the correlations between all the test statistics in
 #' the set, where d is the total number of test statistics in the set.
+#' You only need to specify EITHER cor_mat OR pairwise_cors.
 #' @param pairwise_cors A vector of all d(d-1)/2 pairwise correlations between the test
-#' statistics.  You only need to specify EITHER cor_mat OR pairwise_cors.
+#' statistics. You only need to specify EITHER cor_mat OR pairwise_cors.
 #'
 #' @return A list with the elements:
 #' \item{GHC}{The observed Generalized Higher Criticism test statistic.}
@@ -20,9 +22,8 @@
 #'
 #' @export
 #' @examples
-#' # Should return statistic = 1.987733 and p_value = 0.2758522
 #' set.seed(100)
-#' Z_vec <- rnorm(5) + rep(1,5)
+#' Z_vec <- rnorm(5)
 #' cor_Z <- matrix(data=0.2, nrow=5, ncol=5)
 #' diag(cor_Z) <- 1
 #' GHC(test_stats=Z_vec, cor_mat=cor_Z)
@@ -129,14 +130,14 @@ GHC <- function(test_stats, cor_mat=NULL, pairwise_cors=NULL)
 	    return ( list(GHC=HC_output$HC, GHC_pvalue=HC_output$HC_pvalue, err_code=GHC_err_code) )
 	  }
 
-	  # If evidence of underdispersion, again give them BJ p-value
+	  # If evidence of underdispersion, again give them HC p-value
 	  else if (sum(pairwise_cors) < 0) {
 	    HC_output <- HC(test_stats=t_vec, pairwise_cors=pairwise_cors)
 	    GHC_err_code <- '2: Error in numerical routines. Many apologies, please report to developer! Returning standard Higher Criticism test instead.'
 	    return ( list(GHC=HC_output$HC, GHC_pvalue=HC_output$HC_pvalue, err_code=GHC_err_code) )
 	  }
 
-	  # Any other errors, give them BJ p-value
+	  # Any other errors, give them HC p-value
 	  else {
 	    HC_output <- HC(test_stats=t_vec, pairwise_cors=pairwise_cors)
 	    GHC_err_code <- '3: Unknown error. Many apologies, please report to developer! Returning standard Higher Criticism test instead.'

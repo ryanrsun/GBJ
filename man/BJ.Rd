@@ -7,13 +7,15 @@
 BJ(test_stats, cor_mat = NULL, pairwise_cors = NULL)
 }
 \arguments{
-\item{test_stats}{Vector of all individual (first-level) test statistics}
+\item{test_stats}{Vector of test statistics for each factor in the set (i.e. marginal
+test statistic for each SNP in a gene)}
 
 \item{cor_mat}{d*d matrix of the correlations between all the test statistics in
-the set, where d is the total number of test statistics in the set.}
+the set, where d is the total number of test statistics in the set.
+You only need to specify EITHER cor_mat OR pairwise_cors.}
 
 \item{pairwise_cors}{A vector of all d(d-1)/2 pairwise correlations between the test
-statistics.  You only need to specify EITHER cor_mat OR pairwise_cors.}
+statistics. You only need to specify EITHER cor_mat OR pairwise_cors.}
 }
 \value{
 A list with the elements:

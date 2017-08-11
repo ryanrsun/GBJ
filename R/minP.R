@@ -3,11 +3,13 @@
 #' Given a vector of individual test statistics and their pairwise correlations, calculate
 #' the MinimumP (see Conneely and Boehnke, 2007) second-level test statistic and it's p-value.
 #'
-#' @param test_stats Vector of all individual (first-level) test statistics
+#' @param test_stats Vector of test statistics for each factor in the set (i.e. marginal
+#' test statistic for each SNP in a gene)
 #' @param cor_mat d*d matrix of the correlations between all the test statistics in
 #' the set, where d is the total number of test statistics in the set.
+#' You only need to specify EITHER cor_mat OR pairwise_cors.
 #' @param pairwise_cors A vector of all d(d-1)/2 pairwise correlations between the test
-#' statistics.  You only need to specify EITHER cor_mat OR pairwise_cors.
+#' statistics. You only need to specify EITHER cor_mat OR pairwise_cors.
 #'
 #' @return A list with the elements:
 #' \item{minP}{The observed MinimumP test statistic.}

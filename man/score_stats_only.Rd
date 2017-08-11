@@ -9,22 +9,21 @@ score_stats_only(null_model, factor_matrix, link_function)
 \arguments{
 \item{null_model}{An R regression model fitted using glm().  Do not use lm(), even for linear regression!}
 
-\item{factor_matrix}{An n*p matrix with each factor as one column.  There should be no missing data.}
+\item{factor_matrix}{An n*d matrix with each factor as one column.  There should be no missing data.}
 
-\item{link_function}{Either "linear" or "logit" or "log"}
+\item{link_function}{Either "linear" or "logit" or "log".}
 }
 \value{
-A list with the elements:
-\item{test_stats}{The p score test statistics.}
+The d score test statistics.
 }
 \description{
 Starting with individual-level data on p factors, generate score test statistics for each
-factor for input into GBJ/GHC/HC/BJ/minP.  DO NOT get the correlations (assumed known).
+factor for input into GBJ/GHC/HC/BJ/minP.  DOES NOT get the correlations (assumed known).
 }
 \examples{
 Y <- rbinom(n=100, size=1, prob=0.5)
 null_mod <- glm(Y~1, family=binomial(link="logit"))
-factor_mat <- matrix(data=rnorm(n=100*5), nrow=100)
-score_stats_only(null_mod, factor_mat, "logit")
+factor_matrix <- matrix(data=rnorm(n=100*5), nrow=100)
+score_stats_only(null_mod, factor_matrix, "logit")
 }
 
