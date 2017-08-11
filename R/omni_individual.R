@@ -7,8 +7,8 @@
 #' the SKAT package (install.packages("SKAT"); library(SKAT)).
 #'
 #' @param null_model An R regression model fitted using glm().  Do not use lm(), even for linear regression!
-#' @param factor_matrix An n*p matrix with each factor as one column.  There should be no missing data.
-#' @param link_function Either "linear" or "logit" or "log"
+#' @param factor_matrix An n*d matrix with each factor (i.e. each SNP) as one column.  There should be no missing data.
+#' @param link_function Either "linear" or "logit" or "log".
 #' @param num_boots Number of bootstrap repetitions to find correlation matrix of set-based statistics.
 #'
 #' @return A list with the elements:
@@ -24,7 +24,10 @@
 #' null_mod <- glm(Y ~ 1)
 #' OMNI_individual(null_model=null_mod, factor_matrix=factor_matrix, link_function='linear')
 
-OMNI_individual <- function(null_model, factor_matrix, link_function, num_boots=500) {
+OMNI_individual <- function(null_model, factor_matrix, link_function, num_boots=100) {
+
+  # Sink for SKAT warnings
+  sink("/dev/null")
 
   # Check link function
   if ( !(link_function %in% c('logit', 'linear', 'log')) ) {
@@ -100,15 +103,13 @@ OMNI_individual <- function(null_model, factor_matrix, link_function, num_boots=
     boot_skat_p <- SKAT::SKAT(Z=factor_matrix, obj=boot_skat_obj)$p.value
 
     # Get all the marginal test statistics
-    boot_output <- calc_score_stats(null_model=boot_null_mod, factor_matrix=factor_matrix,
-                                           link_function=link_function)
-    boot_stats <- boot_output$test_stats
-    boot_cor_mat <- boot_output$cor_mat
+    boot_stats <- score_stats_only(null_mod=boot_null_mod, factor_matrix=factor_matrix,
+                                    link_function=link_function)
 
     # Do GBJ, GHC, minP
-    boot_GHC_p <- GHC(test_stats=boot_stats, cor_mat=boot_cor_mat)$GHC_pvalue
-    boot_GBJ_p <- GBJ(test_stats=boot_stats, cor_mat=boot_cor_mat)$GBJ_pvalue
-    boot_minP_p <- minP(test_stats=boot_stats, cor_mat=boot_cor_mat)$minP_pvalue
+    boot_GHC_p <- GHC(test_stats=boot_stats, cor_mat=cor_mat)$GHC_pvalue
+    boot_GBJ_p <- GBJ(test_stats=boot_stats, cor_mat=cor_mat)$GBJ_pvalue
+    boot_minP_p <- minP(test_stats=boot_stats, cor_mat=cor_mat)$minP_pvalue
 
     # Errors?
     boot_vec <- c(boot_minP_p, boot_GHC_p, boot_GBJ_p, boot_skat_p)
@@ -134,6 +135,9 @@ OMNI_individual <- function(null_model, factor_matrix, link_function, num_boots=
 
   # Get pvalue of omnibus test
   omni_p <- 1 - mvtnorm::pmvnorm(lower=-Inf, upper=rep(qnorm(1-omni_stat), 4), sigma=setbased_cor)[1]
+
+  # Unsink
+  sink()
 
   return ( list(OMNI=omni_stat, OMNI_p=omni_p, err_code=0) )
 }
