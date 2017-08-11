@@ -1,12 +1,21 @@
 Package: GBJ
 Type: Package
 Title: The Generalized Berk-Jones Statistic for Set-Based Inference
-Version: 0.2.1
+Version: 0.4.0
 Date: 2016-10-05
 Authors@R: person("Ryan", "Sun", email = "ryansun.work@gmail.com", role = c("aut", "cre"))
-Description: Computes the Generalized Berk-Jones (GBJ) statistic for set-based inference on multiple hypotheses.  Also includes routines to compute the Generalized Higher Criticism (GHC), Higher Criticism (HC), Berk-Jones (BJ), and Minimum p-value (minP) tests.  See vignette for explanations and examples.
+Description: Offers the Generalized Berk-Jones (GBJ) test for set-based inference in genetic    
+    association studies. The GBJ is designed as an alternative to tests such as Berk-Jones (BJ),
+    Higher Criticism (HC), Generalized Higher Criticism (GHC), Minimum p-value (minP), and SKAT.  
+    All of these other methods (except for SKAT) are also implemented in this package, and we 
+    additionally provide an omnibus test (OMNI) which integrates information from each of the tests.
+    The GBJ has been shown to outperform other tests in genetic association studies when signals
+    are correlated and moderately sparse. For more details, please ask for a preprint of the 
+    manuscript (Sun and Lin, "The Generalized Berk-Jones Statistic for Genetic Association Studies,"
+    Submitted"), or see the vignette for a quickstart guide.
 Imports:
     Rcpp (>= 0.12.7),
+    mvtnorm,
     stats,
 LinkingTo: Rcpp, BH
 License: GPL-3
