@@ -26,9 +26,6 @@
 
 OMNI_individual <- function(null_model, factor_matrix, link_function, num_boots=100) {
 
-  # Sink for SKAT warnings
-  sink("/dev/null")
-
   # Check link function
   if ( !(link_function %in% c('logit', 'linear', 'log')) ) {
     stop('Incorrect link function')
@@ -44,14 +41,14 @@ OMNI_individual <- function(null_model, factor_matrix, link_function, num_boots=
   skat_Y <- null_model$y
   skat_dmat <- model.matrix(null_model)
   if (link_function == 'logit') {
-    skat_obj <- SKAT::SKAT_Null_Model(skat_Y ~ skat_dmat - 1, out_type='D')
+    skat_obj <- SKAT::SKAT_Null_Model(skat_Y ~ skat_dmat - 1, out_type='D', Adjustment=FALSE)
   } else {
-    skat_obj <- SKAT::SKAT_Null_Model(skat_Y ~ skat_dmat - 1, out_type='C')
+    skat_obj <- SKAT::SKAT_Null_Model(skat_Y ~ skat_dmat - 1, out_type='C', Adjustment=FALSE)
   }
   skat_pvalue <- SKAT::SKAT(factor_matrix, skat_obj)$p.value
 
   # Get all the marginal test statistics
-  score_stats_output <- calc_score_stats(null_model=null_mod, factor_matrix=factor_matrix,
+  score_stats_output <- calc_score_stats(null_model=null_model, factor_matrix=factor_matrix,
                                   link_function=link_function)
   marginal_stats <- score_stats_output$test_stats
   cor_mat <- score_stats_output$cor_mat
@@ -78,24 +75,27 @@ OMNI_individual <- function(null_model, factor_matrix, link_function, num_boots=
   # Omnibus test statistic
   omni_stat <- min(skat_pvalue, GHC_pvalue, GBJ_pvalue, minP_pvalue)
 
+  ############################################################################
+  ############################################################################
   # Simulate correlation matrix under the null
   fitted_values <- null_model$fitted.values
   num_sub <- length(fitted_values)
   boot_pvalues <- matrix(data=NA, nrow=num_boots, ncol=4)
+  ell <- rep(NA, num_boots)
   for (i in 1:num_boots) {
 
     # Simulate new outcome, fit new null models
     if (link_function == 'logit') {
       boot_Y <- rbinom(n=num_sub, size=1, prob=fitted_values)
-      boot_skat_obj <- SKAT::SKAT_Null_Model(boot_Y ~ skat_dmat - 1, out_type = 'D')
+      boot_skat_obj <- SKAT::SKAT_Null_Model(boot_Y ~ skat_dmat - 1, out_type = 'D', Adjustment=FALSE)
       boot_null_mod <- glm(boot_Y ~ skat_dmat - 1, family=binomial)
     } else if (link_function == 'linear') {
       boot_Y <- fitted_values + rnorm(n=num_sub)
-      boot_skat_obj <- SKAT::SKAT_Null_Model(boot_Y ~ skat_dmat - 1, out_type = 'C')
+      boot_skat_obj <- SKAT::SKAT_Null_Model(boot_Y ~ skat_dmat - 1, out_type = 'C', Adjustment=FALSE)
       boot_null_mod <- glm(boot_Y ~ skat_dmat - 1)
     } else if (link_function == 'log') {
       boot_Y <- rpois(n=num_sub, lambda=fitted_values)
-      boot_skat_obj <- SKAT::SKAT_Null_Model(boot_Y ~ skat_dmat - 1, out_type = 'C')
+      boot_skat_obj <- SKAT::SKAT_Null_Model(boot_Y ~ skat_dmat - 1, out_type = 'C', Adjustment=FALSE)
       boot_null_mod <- glm(boot_Y ~ skat_dmat - 1, family=poisson)
     }
 
@@ -119,11 +119,12 @@ OMNI_individual <- function(null_model, factor_matrix, link_function, num_boots=
 
     # Can't transform p-value of 1
     if (length(which(boot_vec == 1))) {
-      boot_vec[which(boot_vec == 1)] <- 0.01
+      boot_vec[which(boot_vec == 1)] <- 0.99
     }
 
     # Transform and record
     boot_pvalues[i, ] <- qnorm(1-boot_vec)
+    ell[i] <- min(boot_vec)
   }
 
   # Remove NA rows, find correlation matrix
@@ -136,8 +137,5 @@ OMNI_individual <- function(null_model, factor_matrix, link_function, num_boots=
   # Get pvalue of omnibus test
   omni_p <- 1 - mvtnorm::pmvnorm(lower=-Inf, upper=rep(qnorm(1-omni_stat), 4), sigma=setbased_cor)[1]
 
-  # Unsink
-  sink()
-
-  return ( list(OMNI=omni_stat, OMNI_p=omni_p, err_code=0) )
+  return ( list(OMNI=omni_stat, OMNI_pvalue=omni_p, err_code=0) )
 }

@@ -23,7 +23,11 @@
 #' test_stats <- as.numeric(mvtnorm::rmvnorm(n=1, sigma=cor_mat))
 #' OMNI_ss(test_stats=test_stats, cor_mat=cor_mat)
 
-OMNI_ss <- function(test_stats, cor_mat=NULL, num_boots=100) {
+OMNI_ss <- function(test_stats, cor_mat, num_boots=100) {
+
+  # Make sure our correlation matrix actually has 1 on the diagonal
+  # because we use it in rmvnorm here.
+  diag(cor_mat) <- 1
 
   # Do GBJ, GHC, minP
   GHC_output <- GHC(test_stats=test_stats, cor_mat=cor_mat)
@@ -66,7 +70,7 @@ OMNI_ss <- function(test_stats, cor_mat=NULL, num_boots=100) {
 
     # Can't transform p-value of 1
     if (length(which(boot_vec == 1))) {
-      boot_vec[which(boot_vec == 1)] <- 0.01
+      boot_vec[which(boot_vec == 1)] <- 0.99
     }
 
     # Transform and record
@@ -83,5 +87,5 @@ OMNI_ss <- function(test_stats, cor_mat=NULL, num_boots=100) {
   # Get pvalue of omnibus test
   omni_p <- 1 - mvtnorm::pmvnorm(lower=-Inf, upper=rep(qnorm(1-omni_stat), 3), sigma=setbased_cor)[1]
 
-  return ( list(OMNI=omni_stat, OMNI_p=omni_p, err_code=0) )
+  return ( list(OMNI=omni_stat, OMNI_pvalue=omni_p, err_code=0) )
 }
