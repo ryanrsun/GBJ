@@ -60,7 +60,7 @@ score_stats_only <- function(null_model, factor_matrix, link_function) {
     }
 
     # Return from here
-    return ( list(test_stats=test_stats) )
+    return ( test_stats)
   }
 
   ########################
