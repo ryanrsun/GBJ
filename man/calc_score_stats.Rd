@@ -4,7 +4,7 @@
 \alias{calc_score_stats}
 \title{calc_score_stats.R}
 \usage{
-calc_score_stats(null_model, factor_matrix, link_function)
+calc_score_stats(null_model, factor_matrix, link_function, P_mat = NULL)
 }
 \arguments{
 \item{null_model}{An R regression model fitted using glm().  Do not use lm(), even for linear regression!}
@@ -12,6 +12,9 @@ calc_score_stats(null_model, factor_matrix, link_function)
 \item{factor_matrix}{An n*p matrix with each factor as one column.  There should be no missing data.}
 
 \item{link_function}{Either "linear" or "logit" or "log"}
+
+\item{P_mat}{The projection matrix used in calculation may be passed in to speed up the calculation.
+See paper for details. Default is null.}
 }
 \value{
 A list with the elements:
