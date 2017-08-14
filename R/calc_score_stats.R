@@ -7,6 +7,8 @@
 #' @param null_model An R regression model fitted using glm().  Do not use lm(), even for linear regression!
 #' @param factor_matrix An n*p matrix with each factor as one column.  There should be no missing data.
 #' @param link_function Either "linear" or "logit" or "log"
+#' @param P_mat The projection matrix used in calculation may be passed in to speed up the calculation.
+#' See paper for details. Default is null.
 #'
 #' @return A list with the elements:
 #' \item{test_stats}{The p score test statistics.}
@@ -19,7 +21,7 @@
 #' factor_mat <- matrix(data=rnorm(n=100*5), nrow=100)
 #' calc_score_stats(null_mod, factor_mat, "logit")
 
-calc_score_stats <- function(null_model, factor_matrix, link_function) {
+calc_score_stats <- function(null_model, factor_matrix, link_function, P_mat=NULL) {
 
 	X_mat <- model.matrix(null_model)
 	d <- ncol(factor_matrix)
@@ -69,8 +71,15 @@ calc_score_stats <- function(null_model, factor_matrix, link_function) {
 
 	########################
 	# Regular mode
-	W_mat <- diag(W_vec)
-	P_mat <- W_mat - W_mat%*%X_mat %*% solve(t(X_mat)%*%W_mat%*%X_mat) %*% t(X_mat)%*%W_mat
+	if (is.null(P_mat)) {
+	  W_mat <- diag(W_vec)
+	  P_mat <- W_mat - W_mat%*%X_mat %*% solve(t(X_mat)%*%W_mat%*%X_mat) %*% t(X_mat)%*%W_mat
+	} else {
+	  # If they provided a P_mat, make sure it's the correct dimensions
+	  if (nrow(P_mat) != ncol(P_mat) | nrow(P_mat) != nrow(factor_matrix)) {
+	    stop('Your P_mat does not have the correct dimensions (n*n).')
+	  }
+	}
 
 	# Now our score test
 	test_stats <- rep(NA, d)
