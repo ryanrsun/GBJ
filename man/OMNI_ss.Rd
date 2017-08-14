@@ -4,7 +4,7 @@
 \alias{OMNI_ss}
 \title{omni_ss.R}
 \usage{
-OMNI_ss(test_stats, cor_mat = NULL, num_boots = 100)
+OMNI_ss(test_stats, cor_mat, num_boots = 100)
 }
 \arguments{
 \item{test_stats}{Vector of test statistics for each factor in the set (i.e. marginal
