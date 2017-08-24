@@ -103,7 +103,7 @@ test_that("OMNI p-value correct for logistic regression case", {
   # Not for CRAN
   skip_on_cran()
 
-  set.seed(0)
+  set.seed(1)
 
   # Generate the genotypes with exchangeable correlation matrix 5*5
   G_cor <- matrix(data=0.3, nrow=5, ncol=5)
@@ -111,7 +111,7 @@ test_that("OMNI p-value correct for logistic regression case", {
 
   # Generate outcome
   # Don't import bindata, we only use it for this test that's not even on CRAN
-  num_sub <- 500
+  num_sub <- 1000
   G_mat <- bindata::rmvbin(n=num_sub, margprob=rep(0.3, 5), bincorr=G_cor)
   X1 <- rnorm(num_sub)
   X2 <- rnorm(num_sub)
@@ -131,10 +131,10 @@ test_that("OMNI p-value correct for logistic regression case", {
   analytic_p <- omni_output$OMNI_pvalue
 
   # Calculate p-value with simulation
-  sim_p <- MC_OMNI_logistic(num_sims=500, cor_mat=cor_mat, obs_omni=obs_omni, null_model=null_mod,
+  sim_p <- MC_OMNI_logistic(num_sims=3000, cor_mat=cor_mat, obs_omni=obs_omni, null_model=null_mod,
                    factor_matrix=G_mat)
 
-  # Should change neither \alpha_G nor \alpha_I
+  # Analytic p-value should come close to simulation
   expect_equal(analytic_p, sim_p, tolerance = 0.02)
 })
 
@@ -177,7 +177,7 @@ test_that("OMNI p-value correct for linear regression case", {
   sim_p <- MC_OMNI_linear(num_sims=500, null_model=null_mod, cor_mat=cor_mat, factor_matrix=G_mat,
                           obs_omni=obs_omni)
 
-  # Should change neither \alpha_G nor \alpha_I
+  # Analytic p-value should come close to simulation
   expect_equal(analytic_p, sim_p, tolerance = 0.02)
 })
 
@@ -206,6 +206,6 @@ test_that("OMNI p-value correct for summary statistics case", {
   # Calculate p-value with simulation
   sim_p <- MC_OMNI_ss(num_sims=500, cor_mat=cor_mat, obs_omni=obs_omni)
 
-  # Should change neither \alpha_G nor \alpha_I
+  # Analytic p-value should come close to simulation
   expect_equal(analytic_p, sim_p, tolerance = 0.02)
 })
