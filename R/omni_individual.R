@@ -17,6 +17,9 @@
 #' \item{err_code}{Sometimes if your p-value is very small (< 1*10^(-10)), R may run into numerical
 #' issues. This message will alert you if such a situation occurs.}
 #'
+#' @import mvtnorm
+#' @import SKAT
+#'
 #' @export
 #' @examples
 #' factor_matrix <- matrix(data=rbinom(n=1000, size=2, prob=0.3), ncol=5)
@@ -103,7 +106,7 @@ OMNI_individual <- function(null_model, factor_matrix, link_function, num_boots=
     boot_skat_p <- SKAT::SKAT(Z=factor_matrix, obj=boot_skat_obj)$p.value
 
     # Get all the marginal test statistics
-    boot_stats <- score_stats_only(null_mod=boot_null_mod, factor_matrix=factor_matrix,
+    boot_stats <- score_stats_only(null_model=boot_null_mod, factor_matrix=factor_matrix,
                                     link_function=link_function)
 
     # Do GBJ, GHC, minP

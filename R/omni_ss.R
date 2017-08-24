@@ -16,6 +16,8 @@
 #' \item{err_code}{Sometimes if your p-value is very small (< 1*10^(-10)), R may run into numerical
 #' issues. This message will alert you if such a situation occurs.}
 #'
+#' @import mvtnorm
+#'
 #' @export
 #' @examples
 #' cor_mat <- matrix(data=0.3, nrow=5, ncol=5)
