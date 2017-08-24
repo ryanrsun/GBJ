@@ -8,7 +8,7 @@ HC(test_stats, cor_mat = NULL, pairwise_cors = NULL)
 }
 \arguments{
 \item{test_stats}{Vector of test statistics for each factor in the set (i.e. marginal
-test statistic for each SNP in a gene)}
+test statistic for each SNP in a gene).}
 
 \item{cor_mat}{d*d matrix of the correlations between all the test statistics in
 the set, where d is the total number of test statistics in the set.
@@ -24,8 +24,7 @@ A list with the elements:
 correlation structure.}
 }
 \description{
-Given a vector of individual test statistics and their pairwise correlations, calculate
-the Higher Criticism second-level test statistic and it's p-value.
+Calculate the Higher Criticism test statistic and p-value.
 }
 \examples{
 # Should return statistic = 2.067475 and p_value = 0.2755146

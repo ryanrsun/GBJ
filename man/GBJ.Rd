@@ -8,7 +8,7 @@ GBJ(test_stats, cor_mat = NULL, pairwise_cors = NULL)
 }
 \arguments{
 \item{test_stats}{Vector of test statistics for each factor in the set (i.e. marginal
-test statistic for each SNP in a gene)}
+test statistic for each SNP in a gene).}
 
 \item{cor_mat}{d*d matrix of the correlations between all the test statistics in
 the set, where d is the total number of test statistics in the set.
@@ -28,8 +28,7 @@ these cases (and very rarely others) we switch to standard Berk-Jones instead (m
 numerically) and let you know with a message here.}
 }
 \description{
-Given a vector of individual test statistics and their pairwise correlations, calculate
-the Generalized Berk-Jones (GBJ) second-level test statistic and it's p-value.
+Calculate the Generalized Berk-Jones test statistic and p-value.
 }
 \examples{
 # Should return statistic = 0.9248399 and p_value = 0.2670707
