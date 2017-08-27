@@ -442,8 +442,10 @@ double calc_allq(const int &d,
 
     if (filled_hermtable || filled_rtable)
     {
-        std::cout << "Problem creating lookup tables." << std::endl;
-        exit(1);
+        // We can't use cout or exit() in Rcpp - shouldn't come here ever anyway
+        return(-1);
+        //std::cout << "Problem creating lookup tables." << std::endl;
+        //exit(1);
     }
 
     // Fill the d*1 vector of log-factorials
@@ -460,8 +462,10 @@ double calc_allq(const int &d,
                                            covar_vec);
     if (filled_condcovar)
     {
-        std::cout << "Problem calculating moments." << std::endl;
-        exit(1);
+        // We can't use cout or exit() in a Rcpp - shouldn't come here ever anyway
+        return(-1);
+        //std::cout << "Problem calculating moments." << std::endl;
+        //exit(1);
     }
 
     // We don't actually need to hold the entire d*d matrix, just have to always
