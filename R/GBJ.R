@@ -46,7 +46,7 @@ GBJ <- function(test_stats, cor_mat=NULL, pairwise_cors=NULL)
   # Move to BJ if no correlation at all
   if (sum(abs(pairwise_cors)) == 0) {
     BJ_output <- BJ(test_stats=t_vec, pairwise_cors=pairwise_cors)
-    return ( list(GBJ=BJ_output$BJ, GBJ_pvalue=BJ_output$BJ_pvalue) )
+    return ( list(GBJ=BJ_output$BJ, GBJ_pvalue=BJ_output$BJ_pvalue, err_code=0) )
   }
 
 	# Calculate the observed GBJ statistic

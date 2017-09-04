@@ -37,10 +37,10 @@ GHC <- function(test_stats, cor_mat=NULL, pairwise_cors=NULL)
   pairwise_cors <- param_list$pairwise_cors
   d <- length(t_vec)
 
-  # Move to BJ if no correlation at all
+  # Move to hC if no correlation at all
   if (sum(abs(pairwise_cors)) == 0) {
     HC_output <- HC(test_stats=t_vec, pairwise_cors=pairwise_cors)
-    return ( list(GHC=HC_output$HC, GHC_pvalue=HC_output$HC_pvalue) )
+    return ( list(GHC=HC_output$HC, GHC_pvalue=HC_output$HC_pvalue, err_code=0) )
   }
 
 	# Calculate GHC objectives
