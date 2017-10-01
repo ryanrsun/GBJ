@@ -9,9 +9,7 @@ vignette: >
   %\VignetteEncoding{UTF-8}
 ---
 
-The GBJ package implements the Generalized Berk-Jones (GBJ) test as detailed in:
-
-> "The Generalized Berk-Jones Statistic for Set-Based Inference in Genetic Association Studies, Ryan Sun and Xihong Lin, *Submitted*"
+The GBJ package implements the Generalized Berk-Jones (GBJ) test for set-based inference in genetic association studies.
 
 Also included in this package are routines to perform the Generalized Higher Criticism (GHC), Higher Criticism (HC),
 Berk-Jones (BJ), and Minimum p-value (minP) tests.  Some guidance on choosing between these methods (which, in principal,
@@ -21,7 +19,7 @@ The remainder of this vignette provides:
 
 * A high-level explanation of the problems that GBJ/GHC/HC/BJ/minP can solve.
 * A worked example in the context of Genome-Wide Association Studies (GWAS) where individual-level genotype data is available. 
-* A worked example in the context of Genome-Wide Association Studies (GWAS) where only GWAS summary statistics are available. 
+* A worked example in the context of GWAS where only single SNP summary statistics are available. 
 
 ## Uses for GBJ
 
