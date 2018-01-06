@@ -59,23 +59,40 @@ GBJ <- function(test_stats, cor_mat=NULL, pairwise_cors=NULL)
 
 	# If we get NA for the p-value, don't want to return NA to the user
 	if (is.na(GBJ_corp)) {
+
+	  # Give BJ as replacement
+	  BJ_output <- BJ(test_stats=t_vec, pairwise_cors=pairwise_cors)
+
 	  # If gbj >= 20, give them the BJ p-value with a disclaimer
 	  if (gbj >= 20) {
-	    BJ_output <- BJ(test_stats=t_vec, pairwise_cors=pairwise_cors)
 	    GBJ_err_code <- '1: Pvalue likely less than 10^(-12), R/C++ not enough precision. Returning standard Berk-Jones test instead.'
 	    return ( list(GBJ=BJ_output$BJ, GBJ_pvalue=BJ_output$BJ_pvalue, err_code=GBJ_err_code) )
 	  }
 
 	  # If evidence of underdispersion, again give them BJ p-value
 	  else if (sum(pairwise_cors) < 0) {
-	    BJ_output <- BJ(test_stats=t_vec, pairwise_cors=pairwise_cors)
 	    GBJ_err_code <- '2: Error in numerical routines. Many apologies, please report to developer! Returning standard Berk-Jones test instead.'
 	    return ( list(GBJ=BJ_output$BJ, GBJ_pvalue=BJ_output$BJ_pvalue, err_code=GBJ_err_code) )
 	  }
 
 	  # Any other errors, give them BJ p-value
 	  else {
-	    BJ_output <- BJ(test_stats=t_vec, pairwise_cors=pairwise_cors)
+	    GBJ_err_code <- '3: Unknown error. Many apologies, please report to developer! Returning standard Berk-Jones test instead.'
+	    return ( list(GBJ=BJ_output$BJ, GBJ_pvalue=BJ_output$BJ_pvalue, err_code=GBJ_err_code) )
+	  }
+	}
+
+	# If we have a negative p-value, don't wnat to return that to the user either
+	if (GBJ_corp < 0) {
+
+	  # Give BJ as replacement
+	  BJ_output <- BJ(test_stats=t_vec, pairwise_cors=pairwise_cors)
+
+	  # If gbj >= 20, give them the BJ p-value with a disclaimer
+	  if (gbj >= 20) {
+	    GBJ_err_code <- '1: Pvalue likely less than 10^(-12), R/C++ not enough precision. Returning standard Berk-Jones test instead.'
+	    return ( list(GBJ=BJ_output$BJ, GBJ_pvalue=BJ_output$BJ_pvalue, err_code=GBJ_err_code) )
+	  } else {
 	    GBJ_err_code <- '3: Unknown error. Many apologies, please report to developer! Returning standard Berk-Jones test instead.'
 	    return ( list(GBJ=BJ_output$BJ, GBJ_pvalue=BJ_output$BJ_pvalue, err_code=GBJ_err_code) )
 	  }
