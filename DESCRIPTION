@@ -1,7 +1,7 @@
 Package: GBJ
 Type: Package
 Title: Generalized Berk-Jones Test for Set-Based Inference in Genetic Association Studies
-Version: 0.5.0
+Version: 0.7.0
 Date: 2017-10-01
 Authors@R: person("Ryan", "Sun", email = "ryansun.work@gmail.com", role = c("aut", "cre"))
 Description: Offers the Generalized Berk-Jones (GBJ) test for set-based inference in genetic
