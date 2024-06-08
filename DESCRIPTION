@@ -1,8 +1,8 @@
 Package: GBJ
 Type: Package
 Title: Generalized Berk-Jones Test for Set-Based Inference in Genetic Association Studies
-Version: 0.5.2
-Date: 2018-06-27
+Version: 0.5.4
+Date: 2024-01-28
 Authors@R: person("Ryan", "Sun", email = "ryansun.work@gmail.com", role = c("aut", "cre"))
 Description: Offers the Generalized Berk-Jones (GBJ) test for set-based inference in genetic
 	association studies. The GBJ is designed as an alternative to tests such as Berk-Jones (BJ),
@@ -17,10 +17,10 @@ Imports:
     Rcpp (>= 0.12.7),
     mvtnorm,
     SKAT,
-    stats,
+    stats  
 LinkingTo: Rcpp, BH
 License: GPL-3
-RoxygenNote: 5.0.1
+RoxygenNote: 7.3.1
 Suggests: knitr,
     rmarkdown,
     bindata,

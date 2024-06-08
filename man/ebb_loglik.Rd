@@ -23,4 +23,3 @@ Takes in a vectorized argument because we apply() it in run_BB_GBJ().
 ebb_loglik(x=c(1, 0.5, 0.1), d=10)	
 }
 \keyword{internal}
-

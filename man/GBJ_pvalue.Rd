@@ -27,4 +27,3 @@ Calculate the p-value for the Generalized Berk-Jones (GBJ) statistic.
 \examples{
 GBJ_pvalue(observed_gbj=2, d=5, pairwise_cors=rep(0.2,10))
 }
-

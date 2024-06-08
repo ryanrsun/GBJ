@@ -10,7 +10,7 @@
 #' @keywords datasets
 #' @name FGFR2
 #' @usage data(FGFR2)
-#' @source \url{http://www.internationalgenome.org/data}
+#' @source \url{https://www.internationalgenome.org/data}
 NULL
 
 

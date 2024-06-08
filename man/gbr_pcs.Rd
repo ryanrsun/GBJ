@@ -4,7 +4,9 @@
 \name{gbr_pcs}
 \alias{gbr_pcs}
 \title{Simulated Principal Components for 'GBR' population in the 1000 Genomes Project.}
-\format{A matrix with 91 rows (one for each subject) and 5 columns (one for each PC)}
+\format{
+A matrix with 91 rows (one for each subject) and 5 columns (one for each PC)
+}
 \usage{
 data(gbr_pcs)
 }
@@ -14,4 +16,3 @@ from the 'GBR' population in the 1000 Genomes Projects.  These would normally be
 used as covariates in a regression model to control for population stratification.
 }
 \keyword{datasets}
-

@@ -27,4 +27,3 @@ See GBJ paper for more details.  Vectorized in t.
 calc_var_nonzero_mu(d=5, t=1, mu=1, pairwise_cors=rep(0.3, 10))
 }
 \keyword{internal}
-

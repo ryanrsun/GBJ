@@ -18,4 +18,3 @@ Survival (1 minus the CDF) function of standard normal random variable.
 \examples{
 surv(0)		# Should return 0.5
 }
-

@@ -29,4 +29,3 @@ null_mod <- glm(Y~1, family=binomial(link="logit"))
 factor_matrix <- matrix(data=rnorm(n=100*5), nrow=100)
 score_stats_only(null_mod, factor_matrix, "logit")
 }
-

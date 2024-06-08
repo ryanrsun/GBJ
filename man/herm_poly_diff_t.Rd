@@ -25,4 +25,3 @@ the test statistics Z_1,...,Z_d have a non-zero mean.  See GBJ paper for more de
 herm_poly_diff_t(t1=0, t2=0, pairwise_cors=rep(0.3, 10))
 }
 \keyword{internal}
-

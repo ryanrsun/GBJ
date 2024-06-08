@@ -36,4 +36,3 @@ null_mod <- glm(Y ~ 1)
 OMNI_individual(null_model=null_mod, factor_matrix=factor_matrix,
 link_function='linear', num_boots=5)
 }
-

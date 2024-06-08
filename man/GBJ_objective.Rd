@@ -32,4 +32,3 @@ Mostly for internal use.
 GBJ_objective(t_vec=1:5, d=5, k_vec=NULL, pairwise_cors=rep(0.2,10), offset=0)
 }
 \keyword{internal}
-

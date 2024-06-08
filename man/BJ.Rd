@@ -34,4 +34,3 @@ cor_Z <- matrix(data=0.2, nrow=5, ncol=5)
 diag(cor_Z) <- 1
 BJ(test_stats=Z_vec, cor_mat=cor_Z)
 }
-

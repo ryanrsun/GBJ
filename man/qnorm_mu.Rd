@@ -26,4 +26,3 @@ Take the root of this function to find the mu such that P(|Z|>=t_k) = k/d.
 qnorm_mu(mu=0, t=1.96, kkk=1, d=5)		# Should return 0
 }
 \keyword{internal}
-

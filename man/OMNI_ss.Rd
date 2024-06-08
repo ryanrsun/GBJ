@@ -33,4 +33,3 @@ diag(cor_mat) <- 1
 test_stats <- as.numeric(mvtnorm::rmvnorm(n=1, sigma=cor_mat))
 OMNI_ss(test_stats=test_stats, cor_mat=cor_mat, num_boots=5)
 }
-
