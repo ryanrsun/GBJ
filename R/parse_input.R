@@ -7,6 +7,7 @@
 #' @param test_stats All test statistics in the set
 #' @param cor_mat The correlation matrix of the test statistics
 #' @param pairwise_cors The vector of all pairwise correlations
+#' @param unlimited_factors Removes limit on 2000 factors in a set
 #'
 #' @return A list with the elements:
 #' \item{t_vec}{The sorted magnitudes of test statistics}
@@ -17,10 +18,12 @@
 #' @examples
 #' parse_input(test_stats=rnorm(5), pairwise_cors=rep(0.3,10))
 
-parse_input <- function(test_stats, cor_mat=NULL, pairwise_cors=NULL) {
+parse_input <- function(test_stats, cor_mat=NULL, pairwise_cors=NULL, unlimited_factors=FALSE) {
 
   # Limit the size of sets to 900 factors
-  if (length(test_stats) > 2000) {stop('You have too many factors, please restrict to 2000')}
+  if (!unlimited_factors) {
+    if (length(test_stats) > 2000) {stop('You have too many factors, please restrict to 2000')}
+  }
 
 	# Ensure that the thresholds are sorted in descending order, largest first.
 	t_vec <- sort(abs(test_stats), decreasing=TRUE)

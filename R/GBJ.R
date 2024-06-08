@@ -9,6 +9,7 @@
 #' You only need to specify EITHER cor_mat OR pairwise_cors.
 #' @param pairwise_cors A vector of all d(d-1)/2 pairwise correlations between the test
 #' statistics. You only need to specify EITHER cor_mat OR pairwise_cors.
+#' @param unlimited_factors Removes limit on 2000 factors in a set
 #'
 #' @return A list with the elements:
 #' \item{GBJ}{The observed Generalized Higher Criticism test statistic.}
@@ -34,11 +35,11 @@
 #' GBJ(test_stats=Z_vec, cor_mat=cor_Z)
 
 
-GBJ <- function(test_stats, cor_mat=NULL, pairwise_cors=NULL)
+GBJ <- function(test_stats, cor_mat=NULL, pairwise_cors=NULL, unlimited_factors=FALSE)
 {
   # Parse inputs, do some error checking.
   param_list <- parse_input(test_stats=test_stats, cor_mat=cor_mat,
-                            pairwise_cors=pairwise_cors)
+                            pairwise_cors=pairwise_cors, unlimited_factors=unlimited_factors)
   t_vec <- param_list$t_vec
   pairwise_cors <- param_list$pairwise_cors
   d <- length(t_vec)
